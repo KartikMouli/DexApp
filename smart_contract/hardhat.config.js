@@ -1,13 +1,14 @@
-require('@nomiclabs/hardhat-waffle')
+require("@nomicfoundation/hardhat-toolbox");
 
 module.exports = {
-  solidity: '0.8.0',
+  solidity: "0.8.20",
   networks: {
-    rinkeby: {
-      url: 'https://eth-rinkeby.alchemyapi.io/v2/mEJIAuxHnE2HsvBATUIEBiTLrd-dN5X3',
-      accounts: [
-        'f2679263aadf9db7949246a5265f7cf0b0aece610ba4d84dcfc9304ccd050d0c',
-      ],
+    sepolia: { // Add Sepolia network configuration
+      url: "https://sepolia.infura.io/v3/ed0543ded12947a5aa73445d0a646141", // Replace with your Infura Project ID
+      accounts: ["45a990dc3e33af3d3bdaa3e86878f141ceef52725c239e9a87382244755aaf72"],
     },
   },
-}
+  paths: {
+    artifacts: "./lib/src/artifacts",
+  },
+};
