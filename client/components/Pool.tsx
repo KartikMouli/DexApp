@@ -41,7 +41,7 @@ const customStyles = {
 	},
 }
 
-const Main = () => {
+const Pool = () => {
 	const { formData, handleChange, sendTransaction } =
 		useContext(TransactionContext)
 	const router = useRouter()
@@ -69,7 +69,7 @@ const Main = () => {
 		<div className={style.wrapper}>
 			<div className={style.content}>
 				<div className={style.formHeader}>
-					<div>Send</div>
+					<div>Pool</div>
 					{/* <div>
 						<RiSettings3Fill />
 					</div> */}
@@ -122,4 +122,4 @@ const Main = () => {
 	)
 }
 
-export default Main
+export default Pool
