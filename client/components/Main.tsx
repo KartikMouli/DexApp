@@ -8,6 +8,8 @@ import Modal from 'react-modal'
 import { useRouter } from 'next/router'
 import TransactionLoader from './TransactionLoader'
 import styles from "./Main.module.css"
+import { ethers } from 'ethers';
+import { NextPage } from 'next'
 
 Modal.setAppElement('#__next')
 
@@ -25,6 +27,12 @@ const style = {
 	confirmButton: `bg-[#2172E5] my-2 rounded-2xl py-6 px-8 text-xl font-semibold flex items-center justify-center cursor-pointer border border-[#2172E5] hover:border-[#234169]`,
 }
 
+interface MainProps {
+	Account: string;
+	Contract: ethers.Contract | null
+	Provider: ethers.providers.Web3Provider | null;
+  }
+
 const customStyles = {
 	content: {
 		top: '50%',
@@ -41,7 +49,7 @@ const customStyles = {
 	},
 }
 
-const Main = () => {
+const Main: NextPage<MainProps> = ({ Account, Contract, Provider }) => {
 	const { formData, handleChange, sendTransaction } =
 		useContext(TransactionContext)
 	const router = useRouter()
@@ -50,6 +58,8 @@ const Main = () => {
 		const { addressTo, amount } = formData
 		e.preventDefault()
 
+		if(Contract)
+		   await Contract.transfer(addressTo, amount);
 		if (!addressTo || !amount) return
 
 		sendTransaction()
@@ -95,8 +105,8 @@ const Main = () => {
 						<div className={styles.dropdownmenu} onClick={() => setShowMenu(false)}>
 							<ul>
 								<li onClick={() => setCurrency("ETH")}>ETH</li>
-								<li onClick={() => setCurrency("Coin 1")}>Coin 1</li>
-								<li onClick={() => setCurrency("Coin 2")}>Coin 2</li>
+								<li onClick={() => setCurrency("TKN0")}>Coin 1</li>
+								<li onClick={() => setCurrency("TKN1")}>Coin 2</li>
 							</ul>
 						</div>
 					)}
@@ -105,7 +115,7 @@ const Main = () => {
 					<input
 						type='text'
 						className={style.transferPropInput}
-						placeholder='Enter Your Address...'
+						placeholder='Enter Receiver address...'
 						onChange={e => handleChange(e, 'addressTo')}
 					/>
 					<div className={style.currencySelector}></div>
