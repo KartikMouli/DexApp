@@ -1,4 +1,4 @@
-import abi from './Transactions.json'
+import abi from '../artifacts/contracts/cpamm.sol/CPAMM.json'
 
 export const contractABI = abi.abi
-export const contractAddress = '0xa0F2EC2FBb680b56E7Eb5bC00EDD9d326A75Ed72'
+export const contractAddress = '0x90d5760fC8aE1C73590ADAb6365a60540AAB5274'

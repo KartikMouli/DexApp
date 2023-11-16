@@ -41,30 +41,44 @@ const customStyles = {
     },
 }
 
-const Liquidity = () => {
+const Liquidity = ({ Account, Contract, Provider, setFlag, flag, token, setToken }) => {
     const { formData, handleChange, sendTransaction } =
         useContext(TransactionContext)
     const router = useRouter()
 
-    const handleSubmit = async (e: any) => {
-        const { addressTo, amount } = formData
-        e.preventDefault()
 
-        if (!addressTo || !amount) return
-
-        sendTransaction()
-    }
 
     const [currency1, setCurrency1] = useState("ETH");
     const [currency2, setCurrency2] = useState("ETH");
     const [showMenu, setShowMenu] = useState(false);
     const [showMenu1, setShowMenu1] = useState(false);
+    const [amount1, setamount1] = useState("");
+    const [amount2, setamount2] = useState("");
+
+
+
+    console.log('amount1:',amount1)
+    console.log('amount2:',amount2)
+
+
+    const handleSubmit = async (e: any) => {
+        const { addressTo, amount } = formData
+        e.preventDefault();
+
+        if (currency1 === currency2) {
+            console.error("nikal lavde");
+            return;
+        }
+        console.log(Contract);
+        Contract?.addLiquidity(Number(amount1), Number(amount2));
+    }
 
     function handleClick() {
         setShowMenu(prev => {
             return !prev
         })
     }
+
     function handleClick1() {
         setShowMenu1(prev => {
             return !prev
@@ -77,9 +91,7 @@ const Liquidity = () => {
             <div className={style.content}>
                 <div className={style.formHeader}>
                     <div>Liquidity</div>
-                    {/* <div>
-                        <RiSettings3Fill />
-                    </div> */}
+
                 </div>
                 <div className={style.transferPropContainer}>
                     <input
@@ -88,6 +100,7 @@ const Liquidity = () => {
                         placeholder='0.0'
                         pattern='^[0-9]*[.,]?[0-9]*$'
                         onChange={e => handleChange(e, 'amount')}
+                        onKeyUp={e => setamount1(e.target.value)}
                     />
                     <div className={style.currencySelector} onClick={handleClick1}>
                         <div className={style.currencySelectorContent}>
@@ -102,8 +115,8 @@ const Liquidity = () => {
                         <div className={styles.dropdownmenu} onClick={() => setShowMenu1(false)}>
                             <ul>
                                 <li onClick={() => setCurrency1("ETH")}>ETH</li>
-                                <li onClick={() => setCurrency1("Coin 1")}>Coin 1</li>
-                                <li onClick={() => setCurrency1("Coin 2")}>Coin 2</li>
+                                <li onClick={() => setCurrency1("TKN1")}>Coin 1</li>
+                                <li onClick={() => setCurrency1("TKN2")}>Coin 2</li>
                             </ul>
                         </div>
                     )}
@@ -115,6 +128,7 @@ const Liquidity = () => {
                         placeholder='0.0'
                         pattern='^[0-9]*[.,]?[0-9]*$'
                         onChange={e => handleChange(e, 'addressTo')}
+                        onKeyUp={e => setamount2(e.target.value)}
                     />
                     <div className={style.currencySelector} onClick={handleClick}>
                         <div className={style.currencySelectorContent}>
@@ -129,8 +143,8 @@ const Liquidity = () => {
                         <div className={styles.dropdownmenu} onClick={() => setShowMenu(false)}>
                             <ul>
                                 <li onClick={() => setCurrency2("ETH")}>ETH</li>
-                                <li onClick={() => setCurrency2("Coin 1")}>Coin 1</li>
-                                <li onClick={() => setCurrency2("Coin 2")}>Coin 2</li>
+                                <li onClick={() => setCurrency2("TKN1")}>Coin 1</li>
+                                <li onClick={() => setCurrency2("TKN2")}>Coin 2</li>
                             </ul>
                         </div>
                     )}

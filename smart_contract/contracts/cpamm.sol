@@ -56,7 +56,9 @@ contract CPAMM {
         (yx + ydx - xy) / (x + dx) = dy
         ydx / (x + dx) = dy
         */
+
         // 0.3% fee
+
         uint amountInWithFee = (_amountIn * 997) / 1000;
         amountOut = (reserveOut * amountInWithFee) / (reserveIn + amountInWithFee);
 
@@ -84,6 +86,7 @@ contract CPAMM {
         x / y = dx / dy
         dy = y / x * dx
         */
+        
         if (reserve0 > 0 || reserve1 > 0) {
             require(reserve0 * _amount1 == reserve1 * _amount0, "x / y != dx / dy");
         }

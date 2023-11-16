@@ -2,7 +2,7 @@ const hre = require("hardhat");
 async function main() {
 
   const Upload = await hre.ethers.getContractFactory("CPAMM");
-  const upload = await Upload.deploy("0xf3197E7ce6C96441cE999eC7a50fdA6ffB3F580E", "0x94093684edcd531364BB3834697C45C8940Fabe3");
+  const upload = await Upload.deploy('0x42d007E66728979dA89572511196Cd7cCc6AD85e','0xEc4940b3859Fa34b78c4F2f4B3F4293CE92F1053');
 
   await upload.waitForDeployment();
 

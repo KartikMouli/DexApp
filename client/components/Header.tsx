@@ -24,11 +24,28 @@ const style = {
 	buttonAccent: `bg-[#172A42] w-40 border border-[#163256] hover:border-[#234169] h-full rounded-2xl flex items-center justify-center text-[#4F90EA]`,
 }
 
-const Header = ({ currPage, setCurrPage }) => {
+const Header = ({ Contract, Account, currPage, setCurrPage, token, flag, setFlag }) => {
+
 	const [selectedNav, setSelectedNav] = useState('send')
 	const [userName, setUserName] = useState<string>()
 	const { connectWallet, currentAccount } = useContext(TransactionContext)
+	const [balanceAmount, setBalanceAmount] = useState<number | null>(null);
+	const [showBalance, setShowBalance] = useState(false);
+
+
+
 	// console.log(currPage);
+	console.log('flag:',flag);
+
+
+	const handleBalance = async () => {
+		if (Contract) {
+			const currBalance = await Contract.balanceOf(Account);
+			setBalanceAmount(Number(currBalance));
+			setShowBalance((prev) => !prev);
+		}
+	}
+
 
 	useEffect(() => {
 		if (currentAccount) {
@@ -39,7 +56,7 @@ const Header = ({ currPage, setCurrPage }) => {
         }
         `
 				const clientRes = await client.fetch(query)
-
+				console.log(clientRes)
 				if (!(clientRes[0].userName == 'Unnamed')) {
 					setUserName(clientRes[0].userName)
 				} else {
@@ -48,6 +65,7 @@ const Header = ({ currPage, setCurrPage }) => {
 					)
 				}
 			})()
+
 		}
 	}, [currentAccount])
 
@@ -72,6 +90,7 @@ const Header = ({ currPage, setCurrPage }) => {
 						onClick={() => {
 							setSelectedNav('swap')
 							setCurrPage("swap")
+							setFlag(2)
 						}}
 						className={`${style.navItem} ${selectedNav === 'swap' && style.activeNavItem
 							}`}
@@ -82,6 +101,7 @@ const Header = ({ currPage, setCurrPage }) => {
 						onClick={() => {
 							setSelectedNav('pool')
 							setCurrPage("pool")
+							setFlag(2)
 						}}
 						className={`${style.navItem} ${selectedNav === 'pool' && style.activeNavItem
 							}`}
@@ -92,6 +112,7 @@ const Header = ({ currPage, setCurrPage }) => {
 						onClick={() => {
 							setSelectedNav('liquidity')
 							setCurrPage("liquidity")
+							setFlag(2)
 						}
 						}
 						className={`${style.navItem} ${selectedNav === 'liquidity' && style.activeNavItem
@@ -119,6 +140,7 @@ const Header = ({ currPage, setCurrPage }) => {
 					<div className={style.buttonIconContainer}>
 						<AiOutlineDown />
 					</div>
+
 				</div>
 				{currentAccount ? (
 					<div className={`${style.button} ${style.buttonPadding}`}>
@@ -134,11 +156,11 @@ const Header = ({ currPage, setCurrPage }) => {
 						</div>
 					</div>
 				)}
-				{/* <div className={`${style.button} ${style.buttonPadding}`}>
-					<div className={`${style.buttonIconContainer} mx-2`}>
-						<HiOutlineDotsVertical />
+				<div onClick={() => handleBalance()} className={`${style.button} ${style.buttonPadding} px-10`}>
+					<div className={`${style.buttonIconContainer} mx-6`}>
+						{showBalance ? balanceAmount + " " + token : "Balance"}
 					</div>
-				</div> */}
+				</div>
 			</div>
 		</div>
 	)

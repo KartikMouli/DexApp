@@ -11,6 +11,7 @@ import styles from "./Main.module.css"
 import { ethers } from 'ethers';
 import { NextPage } from 'next'
 
+
 Modal.setAppElement('#__next')
 
 const style = {
@@ -24,14 +25,14 @@ const style = {
 	currencySelectorIcon: `flex items-center`,
 	currencySelectorTicker: `mx-2`,
 	currencySelectorArrow: `text-lg`,
-	confirmButton: `bg-[#2172E5] my-2 rounded-2xl py-6 px-8 text-xl font-semibold flex items-center justify-center cursor-pointer border border-[#2172E5] hover:border-[#234169]`,
+	confirmButton: `bg-[#2172E5] my-2 rounded-2xl py-6 px-8 text-xl font-semibold flex justify-center cursor-pointer border border-[#2172E5] hover:border-[#234169]`,
 }
 
 interface MainProps {
 	Account: string;
 	Contract: ethers.Contract | null
 	Provider: ethers.providers.Web3Provider | null;
-  }
+}
 
 const customStyles = {
 	content: {
@@ -49,30 +50,50 @@ const customStyles = {
 	},
 }
 
-const Main: NextPage<MainProps> = ({ Account, Contract, Provider }) => {
-	const { formData, handleChange, sendTransaction } =
+const Main: NextPage<MainProps> = ({ Account, Contract, Provider, setFlag, flag, token, setToken }) => {
+	const { formData, handleChange, saveTransaction } =
 		useContext(TransactionContext)
 	const router = useRouter()
+
+	
 
 	const handleSubmit = async (e: any) => {
 		const { addressTo, amount } = formData
 		e.preventDefault()
 
-		if(Contract)
-		   await Contract.transfer(addressTo, amount);
 		if (!addressTo || !amount) return
 
-		sendTransaction()
+
+		if (Contract) {
+			const transactionHash = await Contract.transfer(addressTo, amount);
+
+			// console.log(transactionHash)
+
+			await transactionHash.wait()
+
+			await saveTransaction(
+				transactionHash.hash,
+				amount,
+				Account,
+				addressTo,
+			)
+		}
+
 	}
+
 
 	const [currency, setCurrency] = useState("ETH");
 	const [showMenu, setShowMenu] = useState(false);
 
-	function handleClick(){
+	function handleClick() {
 		setShowMenu(prev => {
 			return !prev
 		})
 	}
+
+
+	// console.log('flag2:',flag);
+
 
 
 	return (
@@ -104,9 +125,17 @@ const Main: NextPage<MainProps> = ({ Account, Contract, Provider }) => {
 					{showMenu && (
 						<div className={styles.dropdownmenu} onClick={() => setShowMenu(false)}>
 							<ul>
-								<li onClick={() => setCurrency("ETH")}>ETH</li>
-								<li onClick={() => setCurrency("TKN0")}>Coin 1</li>
-								<li onClick={() => setCurrency("TKN1")}>Coin 2</li>
+								<li onClick={() => setCurrency("ETH") }>ETH</li>
+								<li onClick={() => {
+										setCurrency("TKN1")
+										setFlag(0)
+										setToken("TKN1")
+									}}>Coin 1</li>
+								<li onClick={() => {
+										setCurrency("TKN2")
+										setFlag(1);
+										setToken("TKN2")
+									}}>Coin 2</li>
 							</ul>
 						</div>
 					)}
@@ -120,15 +149,19 @@ const Main: NextPage<MainProps> = ({ Account, Contract, Provider }) => {
 					/>
 					<div className={style.currencySelector}></div>
 				</div>
+
+
 				<div onClick={e => handleSubmit(e)} className={style.confirmButton}>
 					Confirm
 				</div>
+
+
 			</div>
 
 			<Modal isOpen={!!router.query.loading} style={customStyles}>
 				<TransactionLoader />
 			</Modal>
-		</div>
+		</div >
 	)
 }
 

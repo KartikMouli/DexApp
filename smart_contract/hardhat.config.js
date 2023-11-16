@@ -4,8 +4,8 @@ module.exports = {
   solidity: "0.8.20",
   networks: {
     sepolia: { // Add Sepolia network configuration
-      url: "https://sepolia.infura.io/v3/ed0543ded12947a5aa73445d0a646141", // Replace with your Infura Project ID
-      accounts: ["45a990dc3e33af3d3bdaa3e86878f141ceef52725c239e9a87382244755aaf72"],
+      url: "https://sepolia.infura.io/v3/66bdec5a7e554343a20de72c07721744", // Replace with your Infura Project ID
+      accounts: ["5ab2fa5be5a1947f1845bd4e4b08fe82a7312a33f32ce618de1f93b244e98c2e"],
     },
   },
   paths: {
