@@ -30,7 +30,8 @@ const style = {
 
 interface MainProps {
 	Account: string;
-	Contract: ethers.Contract | null
+	ERC20_1Contract: ethers.Contract | null;
+	ERC20_2Contract: ethers.Contract | null;
 	Provider: ethers.providers.Web3Provider | null;
 }
 
@@ -50,24 +51,34 @@ const customStyles = {
 	},
 }
 
-const Main: NextPage<MainProps> = ({ Account, Contract, Provider, setFlag, flag, token, setToken }) => {
+const Main: NextPage<MainProps> = ({ ERC20_1Contract, ERC20_2Contract, Provider, Account, token, setToken }) => {
 	const { formData, handleChange, saveTransaction } =
 		useContext(TransactionContext)
 	const router = useRouter()
 
-	
+	const [contract, setContract] = useState(0);
 
 	const handleSubmit = async (e: any) => {
+		e.preventDefault();
 		const { addressTo, amount } = formData
-		e.preventDefault()
 
-		if (!addressTo || !amount) return
+		if (!addressTo || !amount) return;
 
 
-		if (Contract) {
-			const transactionHash = await Contract.transfer(addressTo, amount);
+		if (contract === 0) {
+			const transactionHash = await ERC20_1Contract?.transfer(addressTo, amount);
 
-			// console.log(transactionHash)
+			await transactionHash.wait()
+
+			await saveTransaction(
+				transactionHash.hash,
+				amount,
+				Account,
+				addressTo,
+			)
+		}
+		else {
+			const transactionHash = await ERC20_2Contract?.transfer(addressTo, amount);
 
 			await transactionHash.wait()
 
@@ -82,7 +93,7 @@ const Main: NextPage<MainProps> = ({ Account, Contract, Provider, setFlag, flag,
 	}
 
 
-	const [currency, setCurrency] = useState("ETH");
+	const [currency, setCurrency] = useState("TKN1");
 	const [showMenu, setShowMenu] = useState(false);
 
 	function handleClick() {
@@ -92,18 +103,11 @@ const Main: NextPage<MainProps> = ({ Account, Contract, Provider, setFlag, flag,
 	}
 
 
-	// console.log('flag2:',flag);
-
-
-
 	return (
 		<div className={style.wrapper}>
 			<div className={style.content}>
 				<div className={style.formHeader}>
 					<div>Send</div>
-					{/* <div>
-						<RiSettings3Fill />
-					</div> */}
 				</div>
 				<div className={style.transferPropContainer}>
 					<input
@@ -125,17 +129,16 @@ const Main: NextPage<MainProps> = ({ Account, Contract, Provider, setFlag, flag,
 					{showMenu && (
 						<div className={styles.dropdownmenu} onClick={() => setShowMenu(false)}>
 							<ul>
-								<li onClick={() => setCurrency("ETH") }>ETH</li>
 								<li onClick={() => {
-										setCurrency("TKN1")
-										setFlag(0)
-										setToken("TKN1")
-									}}>Coin 1</li>
+									setCurrency("TKN1")
+									setContract(0)
+									setToken("TKN1")
+								}}>TKN1</li>
 								<li onClick={() => {
-										setCurrency("TKN2")
-										setFlag(1);
-										setToken("TKN2")
-									}}>Coin 2</li>
+									setCurrency("TKN2")
+									setContract(1);
+									setToken("TKN2")
+								}}>TKN2</li>
 							</ul>
 						</div>
 					)}

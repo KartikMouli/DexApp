@@ -1,17 +1,18 @@
-import Image from "next/image";
-import { RiSettings3Fill } from "react-icons/ri";
-import { AiOutlineDown } from "react-icons/ai";
-import ethLogo from "../assets/eth.png";
-import { useContext, useState, useEffect } from "react";
-import { TransactionContext } from "../context/TransactionContext";
-import Modal from "react-modal";
-import { useRouter } from "next/router";
-import TransactionLoader from "./TransactionLoader";
-import styles from "./Main.module.css";
+import Image from 'next/image'
+import { RiSettings3Fill } from 'react-icons/ri'
+import { AiOutlineDown } from 'react-icons/ai'
+import ethLogo from '../assets/eth.png'
+import { useContext, useState, useEffect } from 'react'
+import { TransactionContext } from '../context/TransactionContext'
+import Modal from 'react-modal'
+import { useRouter } from 'next/router'
+import TransactionLoader from './TransactionLoader'
+import styles from "./Main.module.css"
 import { ethers } from "ethers";
 import { NextPage } from "next";
 
-Modal.setAppElement("#__next");
+
+Modal.setAppElement('#__next')
 
 const style = {
   wrapper: `w-screen flex items-center justify-center mt-14`,
@@ -24,24 +25,24 @@ const style = {
   currencySelectorIcon: `flex items-center`,
   currencySelectorTicker: `mx-2`,
   currencySelectorArrow: `text-lg`,
-  confirmButton: `bg-[#2172E5] my-2 rounded-2xl py-6 px-8 text-xl font-semibold flex items-center justify-center cursor-pointer border border-[#2172E5] hover:border-[#234169]`,
-};
+  confirmButton: `bg-[#2172E5] my-2 rounded-2xl py-6 px-20 text-xl font-semibold flex items-center justify-center cursor-pointer border border-[#2172E5] hover:border-[#234169]`,
+}
 
 const customStyles = {
   content: {
-    top: "50%",
-    left: "50%",
-    right: "auto",
-    bottom: "auto",
-    transform: "translate(-50%, -50%)",
-    backgroundColor: "#0a0b0d",
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    transform: 'translate(-50%, -50%)',
+    backgroundColor: '#0a0b0d',
     padding: 0,
-    border: "none",
+    border: 'none',
   },
   overlay: {
-    backgroundColor: "rgba(10, 11, 13, 0.75)",
+    backgroundColor: 'rgba(10, 11, 13, 0.75)',
   },
-};
+}
 
 interface MainProps {
   Account: string;
@@ -51,69 +52,37 @@ interface MainProps {
   Provider: ethers.providers.Web3Provider | null;
 }
 
-const Liquidity: NextPage<MainProps> = ({
-  Account,
-  CPAMMContract,
-  ERC20_1Contract,
-  ERC20_2Contract,
-  Provider,
-}) => {
-  const { formData, handleChange, sendTransaction } =
-    useContext(TransactionContext);
-  const router = useRouter();
+const Liquidity: NextPage<MainProps> = ({ Account, CPAMMContract, ERC20_1Contract, ERC20_2Contract, Provider }) => {
 
-  const [currency1, setCurrency1] = useState("");
-  const [currency2, setCurrency2] = useState("");
+  const [amount, setAmount] = useState(0);
+  const [contract, setContract] = useState(0);
+  const [calAmount, setCalAmount] = useState(0);
+  const [result1, setResult1] = useState(0);
+  const [result2, setResult2] = useState(0);
+
+
+
+  const [currency1, setCurrency1] = useState("TKN1");
+  const [currency2, setCurrency2] = useState("TKN2");
   const [showMenu, setShowMenu] = useState(false);
   const [showMenu1, setShowMenu1] = useState(false);
+
   const [reserve1, setreserve1] = useState<number | null>();
   const [reserve2, setreserve2] = useState<number | null>();
-  const [amount1, setAmount1] = useState(0);
-  const [amount2, setAmount2] = useState(0);
 
+  const ERC20_0contractAddress = '0x42d007E66728979dA89572511196Cd7cCc6AD85e';
+  const ERC20_1contractAddress = '0xEc4940b3859Fa34b78c4F2f4B3F4293CE92F1053';
 
-  // console.log('reserves of Token 1:',reserve1)
-  // console.log('Reserves of Token 2:',reserve2)
+  const { formData, handleChange, sendTransaction } =
+    useContext(TransactionContext)
+  const router = useRouter()
 
-  const handleSubmit = async (e: any) => {
-    const { addressTo, amount } = formData;
-    e.preventDefault();
-
-    if (currency1 === currency2) {
-      console.error("Select Different Currencies to add Liquidity !");
-      return;
-    }
-    console.log(CPAMMContract);
-
-    CPAMMContract?.addLiquidity(Number(amount1), Number(amount2));
-  };
-
-  const handleApprove = async (e: any) => {
-    const { addressTo, amount } = formData;
-    e.preventDefault();
-
-    await ERC20_1Contract?.approve('0x2929621DEE6Ec91D40ba228F505De164BBd04748',Number(9999999));
-    await ERC20_2Contract?.approve('0x2929621DEE6Ec91D40ba228F505De164BBd04748',Number(9999999));
-
-  };
-
-
-  function handleClick() {
-    setShowMenu((prev) => {
-      return !prev;
-    });
-  }
-
-  function handleClick1() {
-    setShowMenu1((prev) => {
-      return !prev;
-    });
-  }
 
   useEffect(() => {
+
     const loadReserves = async () => {
       try {
-        console.log(CPAMMContract);
+        // console.log(CPAMMContract);
 
         // Make sure CPAMMContract is defined before accessing its properties
         if (CPAMMContract) {
@@ -131,86 +100,156 @@ const Liquidity: NextPage<MainProps> = ({
       } catch (error) {
         console.error("Error loading reserves:", error);
       }
+
     };
-    
+
+
 
     loadReserves();
+
   }, []);
+
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+    // const { addressTo, amount } = formData;
+    console.log(reserve1);
+    console.log(reserve2);
+    console.log(amount)
+    console.log(calAmount);
+
+    if (currency1 === currency2) {
+      alert("Select Different Currencies to add Liquidity !");
+      return;
+    }
+
+    if (currency1 === "TKN1") {
+      CPAMMContract?.addLiquidity(Number(amount), Number(calAmount));
+    } else if (currency1 === "TKN2") {
+      CPAMMContract?.addLiquidity(Number(calAmount), Number(amount));
+    }
+
+  }
+
+  const handleApprove = async (e: any) => {
+    const { addressTo, amount } = formData;
+    e.preventDefault();
+
+    await ERC20_1Contract?.approve('0xCd8493Ea692f034F792e578e1f5ae90d1209b687', Number(9999999));
+    await ERC20_2Contract?.approve('0xCd8493Ea692f034F792e578e1f5ae90d1209b687', Number(9999999));
+
+  };
+
+
+  function handleClick() {
+    setShowMenu(prev => {
+      return !prev
+    })
+  }
+  function handleClick1() {
+    setShowMenu1(prev => {
+      return !prev
+    })
+  }
+
+
+  // console.log(calAmount)
+  async function getRes() {
+    const res1 = await CPAMMContract?.getReserve0();
+    const res2 = await CPAMMContract?.getReserve1();
+    setResult1(Number(res1));
+    setResult2(Number(res2));
+  }
+
+  useEffect(() => {
+    getRes();
+  }, [])
+
+  useEffect(() => {
+    let cal_amount;
+
+    if (currency1 === 'TKN1') {
+      cal_amount = (result2 * amount) / result1;
+    }
+    else if (currency1 === 'TKN2') {
+      cal_amount = (result1 * amount) / result2;
+    }
+    setCalAmount(Number(cal_amount))
+  }, [amount])
+
+  const getCalValue = (e) => {
+    setAmount(Number(e.target.value));
+  }
+
   return (
     <div className={style.wrapper}>
       <div className={style.content}>
         <div className={style.formHeader}>
-          <div>
-            Liquidity {reserve1} {reserve2}
-          </div>
+          <div className=' w-screen flex justify-between'><div>Liquidity</div><div>TKN1: {reserve1} &nbsp; TKN2: {reserve2}</div></div>
         </div>
         <div className={style.transferPropContainer}>
           <input
-            type="text"
+            type='text'
             className={style.transferPropInput}
-            placeholder="0.0"
-            pattern="^[0-9]*[.,]?[0-9]*$"
-            onChange={(e) => handleChange(e, "amount")}
-            onKeyUp={(e) => setAmount1(e.target.value)}
+            placeholder='Enter amount'
+            pattern='^[0-9]*[.,]?[0-9]*$'
+            // onChange={e => handleChange(e, 'amount')}
+            onChange={getCalValue}
           />
           <div className={style.currencySelector} onClick={handleClick1}>
             <div className={style.currencySelectorContent}>
               <div className={style.currencySelectorIcon}>
-                <Image src={ethLogo} alt="eth logo" height={20} width={20} />
+                <Image src={ethLogo} alt='eth logo' height={20} width={20} />
               </div>
               <div className={style.currencySelectorTicker}>{currency1}</div>
               <AiOutlineDown className={style.currencySelectorArrow} />
             </div>
           </div>
           {showMenu1 && (
-            <div
-              className={styles.dropdownmenu}
-              onClick={() => setShowMenu1(false)}
-            >
+            <div className={styles.dropdownmenu} onClick={() => setShowMenu1(false)}>
               <ul>
-                <li onClick={() => setCurrency1("ETH")}>ETH</li>
-                <li onClick={() => setCurrency1("TKN1")}>Coin 1</li>
-                <li onClick={() => setCurrency1("TKN2")}>Coin 2</li>
+                <li onClick={() => {
+                  setCurrency1("TKN1")
+                  setCurrency2("TKN2")
+                  setContract(0)
+                }}>TKN1</li>
+                <li onClick={() => {
+                  setCurrency1("TKN2")
+                  setCurrency2("TKN1")
+                  setContract(1)
+                }}>TKN2</li>
               </ul>
             </div>
           )}
         </div>
         <div className={style.transferPropContainer}>
           <input
-            type="text"
+            type='text'
             className={style.transferPropInput}
-            placeholder="0.0"
-            pattern="^[0-9]*[.,]?[0-9]*$"
-            onChange={(e) => handleChange(e, "addressto")}
-            onKeyUp={(e) => setAmount2(e.target.value)}
+            placeholder='0.0'
+            pattern='^[0-9]*[.,]?[0-9]*$'
+            // onChange={e => handleChange(e, 'addressTo')}
+            readOnly
+            value={calAmount}
           />
           <div className={style.currencySelector} onClick={handleClick}>
             <div className={style.currencySelectorContent}>
               <div className={style.currencySelectorIcon}>
-                <Image src={ethLogo} alt="eth logo" height={20} width={20} />
+                <Image src={ethLogo} alt='eth logo' height={20} width={20} />
               </div>
               <div className={style.currencySelectorTicker}>{currency2}</div>
-              <AiOutlineDown className={style.currencySelectorArrow} />
+              {/* <AiOutlineDown className={style.currencySelectorArrow} /> */}
             </div>
           </div>
-          {showMenu && (
-            <div
-              className={styles.dropdownmenu}
-              onClick={() => setShowMenu(false)}
-            >
-              <ul>
-                <li onClick={() => setCurrency2("ETH")}>ETH</li>
-                <li onClick={() => setCurrency2("TKN1")}>Coin 1</li>
-                <li onClick={() => setCurrency2("TKN2")}>Coin 2</li>
-              </ul>
-            </div>
-          )}
-        </div>
-        <div >
-          <div onClick={(e) => handleSubmit(e)} className={style.confirmButton}>
+          {/* {showMenu && (
+                        <div className={styles.dropdownmenu} onClick={() => setShowMenu(false)}>
+                        </div>
+                    )} */}
+        </div >
+        <div className='flex justify-between'>
+          <div onClick={e => handleSubmit(e)} className={style.confirmButton}>
             Submit
           </div>
-          <div onClick={(e) => handleApprove(e)} className={style.confirmButton}>
+          <div onClick={e => handleApprove(e)} className={style.confirmButton}>
             Approve
           </div>
         </div>
@@ -220,7 +259,7 @@ const Liquidity: NextPage<MainProps> = ({
         <TransactionLoader />
       </Modal>
     </div>
-  );
-};
+  )
+}
 
-export default Liquidity;
+export default Liquidity

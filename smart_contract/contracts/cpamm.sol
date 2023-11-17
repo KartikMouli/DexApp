@@ -24,6 +24,10 @@ contract CPAMM {
         return reserve1;
     }
 
+    function getShares() public view returns (uint){
+        return balanceOf[msg.sender];
+    }
+
     function _mint(address _to, uint _amount) private {
         balanceOf[_to] += _amount;
         totalSupply += _amount;

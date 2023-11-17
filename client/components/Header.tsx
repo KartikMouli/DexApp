@@ -8,6 +8,8 @@ import uniswapLogo from '../assets/uniswap.png'
 import { useContext } from 'react'
 import { TransactionContext } from '../context/TransactionContext'
 import { client } from '../lib/sanityClient'
+import { NextPage } from 'next'
+import { ethers } from 'ethers';
 
 const style = {
 	wrapper: `p-4 w-screen flex justify-between items-center`,
@@ -24,7 +26,15 @@ const style = {
 	buttonAccent: `bg-[#172A42] w-40 border border-[#163256] hover:border-[#234169] h-full rounded-2xl flex items-center justify-center text-[#4F90EA]`,
 }
 
-const Header = ({ Contract, Account, currPage, setCurrPage, token, flag, setFlag }) => {
+interface MainProps {
+	Account: string;
+	ERC20_1Contract: ethers.Contract | null;
+	ERC20_2Contract: ethers.Contract | null;
+	Provider: ethers.providers.Web3Provider | null;
+}
+
+
+const Header: NextPage<MainProps> = ({ ERC20_1Contract, ERC20_2Contract, Account, currPage, setCurrPage, token, flag, setFlag }) => {
 
 	const [selectedNav, setSelectedNav] = useState('send')
 	const [userName, setUserName] = useState<string>()
@@ -34,16 +44,18 @@ const Header = ({ Contract, Account, currPage, setCurrPage, token, flag, setFlag
 
 
 
-	// console.log(currPage);
-	console.log('flag:',flag);
-
 
 	const handleBalance = async () => {
-		if (Contract) {
-			const currBalance = await Contract.balanceOf(Account);
-			setBalanceAmount(Number(currBalance));
-			setShowBalance((prev) => !prev);
+		let currBalance;
+		if (token === "TKN1") {
+			currBalance = await ERC20_1Contract?.balanceOf(Account);
+
 		}
+		else if (token === "TKN2") {
+			currBalance = await ERC20_2Contract?.balanceOf(Account);
+		}
+		setBalanceAmount(Number(currBalance));
+		setShowBalance((prev) => !prev);
 	}
 
 
@@ -121,7 +133,7 @@ const Header = ({ Contract, Account, currPage, setCurrPage, token, flag, setFlag
 						Liquidity
 					</div>
 					<a
-						href='https://info.uniswap.org/#/'
+						href='https://coinmarketcap.com/'
 						target='_blank'
 						rel='noreferrer'
 					>

@@ -52,10 +52,17 @@ interface MainProps {
     Provider: ethers.providers.Web3Provider | null;
 }
 
-const Swap: NextPage<MainProps> = ({ Account, CPAMMContract, ERC20_1Contract, ERC20_2Contract,Provider }) => {
+const Swap: NextPage<MainProps> = ({ Account, CPAMMContract, ERC20_1Contract, ERC20_2Contract, Provider }) => {
 
     const [amount, setAmount] = useState(0);
     const [contract, setContract] = useState(0);
+    const [calAmount, setCalAmount] = useState(0);
+
+
+    const [currency1, setCurrency1] = useState("TKN1");
+    const [currency2, setCurrency2] = useState("TKN2");
+    const [showMenu, setShowMenu] = useState(false);
+    const [showMenu1, setShowMenu1] = useState(false);
 
     const ERC20_0contractAddress = '0x42d007E66728979dA89572511196Cd7cCc6AD85e';
     const ERC20_1contractAddress = '0xEc4940b3859Fa34b78c4F2f4B3F4293CE92F1053';
@@ -71,8 +78,10 @@ const Swap: NextPage<MainProps> = ({ Account, CPAMMContract, ERC20_1Contract, ER
         const { addressTo, amount } = formData
         e.preventDefault()
 
-        console.log("amount:", amount);
-        console.log("contract:", contract);
+        // if (currency1 === currency2) {
+        //     alert("Select Different Currencies to add Swap!");
+        //     return;
+        // }
 
         if (contract) {
             await CPAMMContract?.swap(ERC20_0contractAddress, Number(amount));
@@ -81,17 +90,14 @@ const Swap: NextPage<MainProps> = ({ Account, CPAMMContract, ERC20_1Contract, ER
             await CPAMMContract?.swap(ERC20_1contractAddress, Number(amount));
         }
 
-        // await CPAMMContract?.swap(ERC20_0contractAddress, Number(amount));
+        // const val1 = await CPAMMContract?.getReserve0();
+        // const val2 = await CPAMMContract?.getReserve1();
 
-        // console.log(CPAMMContract);
-
+        // console.log("r1", Number(val1));
+        // console.log("r2", Number(val2));
 
     }
 
-    const [currency1, setCurrency1] = useState("ETH");
-    const [currency2, setCurrency2] = useState("ETH");
-    const [showMenu, setShowMenu] = useState(false);
-    const [showMenu1, setShowMenu1] = useState(false);
 
     function handleClick() {
         setShowMenu(prev => {
@@ -104,24 +110,40 @@ const Swap: NextPage<MainProps> = ({ Account, CPAMMContract, ERC20_1Contract, ER
         })
     }
 
+    async function whenKeyUpped(e) {
+        setAmount(e.target.value);
+        const res1 = await CPAMMContract?.getReserve0();
+        const res2 = await CPAMMContract?.getReserve1();
+
+        let amount1 = amount;
+        let cal_amount = 0;
+
+        if (currency1 === 'TKN1') {
+            cal_amount = (res2 * amount1) / res1;
+        }
+        else if (currency1 === 'TKN2') {
+            cal_amount = (res1 * amount1) / res2;
+        }
+
+
+        setCalAmount(cal_amount);
+    }
+
 
     return (
         <div className={style.wrapper}>
             <div className={style.content}>
                 <div className={style.formHeader}>
                     <div>Swap</div>
-                    {/* <div>
-                        <RiSettings3Fill />
-                    </div> */}
                 </div>
                 <div className={style.transferPropContainer}>
                     <input
                         type='text'
                         className={style.transferPropInput}
-                        placeholder='0.0'
+                        placeholder='Enter amount'
                         pattern='^[0-9]*[.,]?[0-9]*$'
                         onChange={e => handleChange(e, 'amount')}
-                        onKeyUp={(e) => setAmount(e.target.value)}
+                        onKeyUp={e => whenKeyUpped(e)}
                     />
                     <div className={style.currencySelector} onClick={handleClick1}>
                         <div className={style.currencySelectorContent}>
@@ -135,15 +157,16 @@ const Swap: NextPage<MainProps> = ({ Account, CPAMMContract, ERC20_1Contract, ER
                     {showMenu1 && (
                         <div className={styles.dropdownmenu} onClick={() => setShowMenu1(false)}>
                             <ul>
-                                <li onClick={() => setCurrency1("ETH")}>ETH</li>
                                 <li onClick={() => {
-                                    setCurrency1("Coin 1")
+                                    setCurrency1("TKN1")
+                                    setCurrency2("TKN2")
                                     setContract(0)
-                                }}>Coin 1</li>
+                                }}>TKN1</li>
                                 <li onClick={() => {
-                                    setCurrency1("Coin 2")
+                                    setCurrency1("TKN2")
+                                    setCurrency2("TKN1")
                                     setContract(1)
-                                }}>Coin 2</li>
+                                }}>TKN2</li>
                             </ul>
                         </div>
                     )}
@@ -154,7 +177,9 @@ const Swap: NextPage<MainProps> = ({ Account, CPAMMContract, ERC20_1Contract, ER
                         className={style.transferPropInput}
                         placeholder='0.0'
                         pattern='^[0-9]*[.,]?[0-9]*$'
-                        onChange={e => handleChange(e, 'addressTo')}
+                        // onChange={e => handleChange(e, 'addressTo')}
+                        readOnly
+                        value={calAmount}
                     />
                     <div className={style.currencySelector} onClick={handleClick}>
                         <div className={style.currencySelectorContent}>
@@ -162,18 +187,13 @@ const Swap: NextPage<MainProps> = ({ Account, CPAMMContract, ERC20_1Contract, ER
                                 <Image src={ethLogo} alt='eth logo' height={20} width={20} />
                             </div>
                             <div className={style.currencySelectorTicker}>{currency2}</div>
-                            <AiOutlineDown className={style.currencySelectorArrow} />
+                            {/* <AiOutlineDown className={style.currencySelectorArrow} /> */}
                         </div>
                     </div>
-                    {showMenu && (
+                    {/* {showMenu && (
                         <div className={styles.dropdownmenu} onClick={() => setShowMenu(false)}>
-                            <ul>
-                                <li onClick={() => setCurrency2("ETH")}>ETH</li>
-                                <li onClick={() => setCurrency2("Coin 1")}>Coin 1</li>
-                                <li onClick={() => setCurrency2("Coin 2")}>Coin 2</li>
-                            </ul>
                         </div>
-                    )}
+                    )} */}
                 </div>
                 <div onClick={e => handleSubmit(e)} className={style.confirmButton}>
                     Swap
