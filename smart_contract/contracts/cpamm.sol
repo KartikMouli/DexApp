@@ -5,15 +5,23 @@ contract CPAMM {
     IERC20 public immutable token0;
     IERC20 public immutable token1;
 
-    uint public reserve0;
-    uint public reserve1;
+    uint public reserve0 = 0;
+    uint public reserve1 = 0;
 
-    uint public totalSupply;
+    uint public totalSupply = 0;
     mapping(address => uint) public balanceOf;
 
     constructor(address _token0, address _token1) {
         token0 = IERC20(_token0);
         token1 = IERC20(_token1);
+    }
+
+    function getReserve0() public view returns (uint){
+        return reserve0;
+    }
+
+    function getReserve1() public view returns (uint){
+        return reserve1;
     }
 
     function _mint(address _to, uint _amount) private {

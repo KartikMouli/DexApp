@@ -42,27 +42,35 @@ const customStyles = {
     backgroundColor: "rgba(10, 11, 13, 0.75)",
   },
 };
+
 interface MainProps {
   Account: string;
   CPAMMContract: ethers.Contract | null;
+  ERC20_1Contract: ethers.Contract | null;
+  ERC20_2Contract: ethers.Contract | null;
   Provider: ethers.providers.Web3Provider | null;
 }
 
 const Liquidity: NextPage<MainProps> = ({
   Account,
   CPAMMContract,
+  ERC20_1Contract,
+  ERC20_2Contract,
   Provider,
 }) => {
   const { formData, handleChange, sendTransaction } =
     useContext(TransactionContext);
   const router = useRouter();
 
-  const [currency1, setCurrency1] = useState();
-  const [currency2, setCurrency2] = useState();
+  const [currency1, setCurrency1] = useState("");
+  const [currency2, setCurrency2] = useState("");
   const [showMenu, setShowMenu] = useState(false);
   const [showMenu1, setShowMenu1] = useState(false);
   const [reserve1, setreserve1] = useState<number | null>();
   const [reserve2, setreserve2] = useState<number | null>();
+  const [amount1, setAmount1] = useState(0);
+  const [amount2, setAmount2] = useState(0);
+
 
   // console.log('reserves of Token 1:',reserve1)
   // console.log('Reserves of Token 2:',reserve2)
@@ -72,13 +80,23 @@ const Liquidity: NextPage<MainProps> = ({
     e.preventDefault();
 
     if (currency1 === currency2) {
-      console.error("nikal lavde");
+      console.error("Select Different Currencies to add Liquidity !");
       return;
     }
     console.log(CPAMMContract);
 
     CPAMMContract?.addLiquidity(Number(amount1), Number(amount2));
   };
+
+  const handleApprove = async (e: any) => {
+    const { addressTo, amount } = formData;
+    e.preventDefault();
+
+    await ERC20_1Contract?.approve('0x2929621DEE6Ec91D40ba228F505De164BBd04748',Number(9999999));
+    await ERC20_2Contract?.approve('0x2929621DEE6Ec91D40ba228F505De164BBd04748',Number(9999999));
+
+  };
+
 
   function handleClick() {
     setShowMenu((prev) => {
@@ -99,12 +117,12 @@ const Liquidity: NextPage<MainProps> = ({
 
         // Make sure CPAMMContract is defined before accessing its properties
         if (CPAMMContract) {
-          let val1 = CPAMMContract.reserve0;
-          let val2 = CPAMMContract.reserve1;
+          const val1 = await CPAMMContract.getReserve0();
+          const val2 = await CPAMMContract.getReserve1();
 
           // Make sure val1 and val2 are valid values before setting state
 
-          console.log(val1, val2);
+          // console.log(Number(val1), Number(val2));
           setreserve1(Number(val1));
           setreserve2(Number(val2));
         } else {
@@ -114,6 +132,7 @@ const Liquidity: NextPage<MainProps> = ({
         console.error("Error loading reserves:", error);
       }
     };
+    
 
     loadReserves();
   }, []);
@@ -132,7 +151,7 @@ const Liquidity: NextPage<MainProps> = ({
             placeholder="0.0"
             pattern="^[0-9]*[.,]?[0-9]*$"
             onChange={(e) => handleChange(e, "amount")}
-            onKeyUp={(e) => setamount1(e.target.value)}
+            onKeyUp={(e) => setAmount1(e.target.value)}
           />
           <div className={style.currencySelector} onClick={handleClick1}>
             <div className={style.currencySelectorContent}>
@@ -162,8 +181,8 @@ const Liquidity: NextPage<MainProps> = ({
             className={style.transferPropInput}
             placeholder="0.0"
             pattern="^[0-9]*[.,]?[0-9]*$"
-            onChange={(e) => handleChange(e, "addressTo")}
-            onKeyUp={(e) => setamount2(e.target.value)}
+            onChange={(e) => handleChange(e, "addressto")}
+            onKeyUp={(e) => setAmount2(e.target.value)}
           />
           <div className={style.currencySelector} onClick={handleClick}>
             <div className={style.currencySelectorContent}>
@@ -187,8 +206,13 @@ const Liquidity: NextPage<MainProps> = ({
             </div>
           )}
         </div>
-        <div onClick={(e) => handleSubmit(e)} className={style.confirmButton}>
-          Approve
+        <div >
+          <div onClick={(e) => handleSubmit(e)} className={style.confirmButton}>
+            Submit
+          </div>
+          <div onClick={(e) => handleApprove(e)} className={style.confirmButton}>
+            Approve
+          </div>
         </div>
       </div>
 

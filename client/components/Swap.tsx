@@ -8,6 +8,9 @@ import Modal from 'react-modal'
 import { useRouter } from 'next/router'
 import TransactionLoader from './TransactionLoader'
 import styles from "./Main.module.css"
+import { ethers } from "ethers";
+import { NextPage } from "next";
+
 
 Modal.setAppElement('#__next')
 
@@ -41,18 +44,48 @@ const customStyles = {
     },
 }
 
-const Swap = () => {
+interface MainProps {
+    Account: string;
+    CPAMMContract: ethers.Contract | null;
+    ERC20_1Contract: ethers.Contract | null;
+    ERC20_2Contract: ethers.Contract | null;
+    Provider: ethers.providers.Web3Provider | null;
+}
+
+const Swap: NextPage<MainProps> = ({ Account, CPAMMContract, ERC20_1Contract, ERC20_2Contract,Provider }) => {
+
+    const [amount, setAmount] = useState(0);
+    const [contract, setContract] = useState(0);
+
+    const ERC20_0contractAddress = '0x42d007E66728979dA89572511196Cd7cCc6AD85e';
+    const ERC20_1contractAddress = '0xEc4940b3859Fa34b78c4F2f4B3F4293CE92F1053';
+
     const { formData, handleChange, sendTransaction } =
         useContext(TransactionContext)
     const router = useRouter()
+
+
+
 
     const handleSubmit = async (e: any) => {
         const { addressTo, amount } = formData
         e.preventDefault()
 
-        if (!addressTo || !amount) return
+        console.log("amount:", amount);
+        console.log("contract:", contract);
 
-        sendTransaction()
+        if (contract) {
+            await CPAMMContract?.swap(ERC20_0contractAddress, Number(amount));
+        }
+        else {
+            await CPAMMContract?.swap(ERC20_1contractAddress, Number(amount));
+        }
+
+        // await CPAMMContract?.swap(ERC20_0contractAddress, Number(amount));
+
+        // console.log(CPAMMContract);
+
+
     }
 
     const [currency1, setCurrency1] = useState("ETH");
@@ -88,6 +121,7 @@ const Swap = () => {
                         placeholder='0.0'
                         pattern='^[0-9]*[.,]?[0-9]*$'
                         onChange={e => handleChange(e, 'amount')}
+                        onKeyUp={(e) => setAmount(e.target.value)}
                     />
                     <div className={style.currencySelector} onClick={handleClick1}>
                         <div className={style.currencySelectorContent}>
@@ -102,8 +136,14 @@ const Swap = () => {
                         <div className={styles.dropdownmenu} onClick={() => setShowMenu1(false)}>
                             <ul>
                                 <li onClick={() => setCurrency1("ETH")}>ETH</li>
-                                <li onClick={() => setCurrency1("Coin 1")}>Coin 1</li>
-                                <li onClick={() => setCurrency1("Coin 2")}>Coin 2</li>
+                                <li onClick={() => {
+                                    setCurrency1("Coin 1")
+                                    setContract(0)
+                                }}>Coin 1</li>
+                                <li onClick={() => {
+                                    setCurrency1("Coin 2")
+                                    setContract(1)
+                                }}>Coin 2</li>
                             </ul>
                         </div>
                     )}
@@ -136,7 +176,7 @@ const Swap = () => {
                     )}
                 </div>
                 <div onClick={e => handleSubmit(e)} className={style.confirmButton}>
-                    Approve
+                    Swap
                 </div>
             </div>
 

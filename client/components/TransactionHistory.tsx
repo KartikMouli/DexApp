@@ -20,6 +20,8 @@ const TransactionHistory = () => {
   const { isLoading, currentAccount } = useContext(TransactionContext)
   const [transactionHistory, setTransactionHistory] = useState<any[]>([])
 
+  
+
   useEffect(() => {
     ; (async () => {
       if (!isLoading && currentAccount) {
