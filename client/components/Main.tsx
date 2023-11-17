@@ -56,6 +56,8 @@ const Main: NextPage<MainProps> = ({ ERC20_1Contract, ERC20_2Contract, Provider,
 		useContext(TransactionContext)
 	const router = useRouter()
 
+	const [loading, setLoading] = useState(false);
+
 	const [contract, setContract] = useState(0);
 
 	const handleSubmit = async (e: any) => {
@@ -64,7 +66,8 @@ const Main: NextPage<MainProps> = ({ ERC20_1Contract, ERC20_2Contract, Provider,
 
 		if (!addressTo || !amount) return;
 
-
+		setLoading(true);
+		console.log(loading);
 		if (contract === 0) {
 			const transactionHash = await ERC20_1Contract?.transfer(addressTo, amount);
 
@@ -89,6 +92,7 @@ const Main: NextPage<MainProps> = ({ ERC20_1Contract, ERC20_2Contract, Provider,
 				addressTo,
 			)
 		}
+		setLoading(false);
 
 	}
 
@@ -105,65 +109,70 @@ const Main: NextPage<MainProps> = ({ ERC20_1Contract, ERC20_2Contract, Provider,
 
 	return (
 		<div className={style.wrapper}>
-			<div className={style.content}>
-				<div className={style.formHeader}>
-					<div>Send</div>
-				</div>
-				<div className={style.transferPropContainer}>
-					<input
-						type='text'
-						className={style.transferPropInput}
-						placeholder='0.0'
-						pattern='^[0-9]*[.,]?[0-9]*$'
-						onChange={e => handleChange(e, 'amount')}
-					/>
-					<div className={style.currencySelector} onClick={handleClick}>
-						<div className={style.currencySelectorContent}>
-							<div className={style.currencySelectorIcon}>
-								<Image src={ethLogo} alt='eth logo' height={20} width={20} />
+			{loading && <TransactionLoader />}
+			{!loading && (
+				<div>
+					<div className={style.content}>
+						<div className={style.formHeader}>
+							<div>Send</div>
+						</div>
+						<div className={style.transferPropContainer}>
+							<input
+								type='text'
+								className={style.transferPropInput}
+								placeholder='0.0'
+								pattern='^[0-9]*[.,]?[0-9]*$'
+								onChange={e => handleChange(e, 'amount')}
+							/>
+							<div className={style.currencySelector} onClick={handleClick}>
+								<div className={style.currencySelectorContent}>
+									<div className={style.currencySelectorIcon}>
+										<Image src={ethLogo} alt='eth logo' height={20} width={20} />
+									</div>
+									<div className={style.currencySelectorTicker}>{currency}</div>
+									<AiOutlineDown className={style.currencySelectorArrow} />
+								</div>
 							</div>
-							<div className={style.currencySelectorTicker}>{currency}</div>
-							<AiOutlineDown className={style.currencySelectorArrow} />
+							{showMenu && (
+								<div className={styles.dropdownmenu} onClick={() => setShowMenu(false)}>
+									<ul>
+										<li onClick={() => {
+											setCurrency("TKN1")
+											setContract(0)
+											setToken("TKN1")
+										}}>TKN1</li>
+										<li onClick={() => {
+											setCurrency("TKN2")
+											setContract(1);
+											setToken("TKN2")
+										}}>TKN2</li>
+									</ul>
+								</div>
+							)}
 						</div>
+						<div className={style.transferPropContainer}>
+							<input
+								type='text'
+								className={style.transferPropInput}
+								placeholder='Enter Receiver address...'
+								onChange={e => handleChange(e, 'addressTo')}
+							/>
+							<div className={style.currencySelector}></div>
+						</div>
+
+
+						<div onClick={e => handleSubmit(e)} className={style.confirmButton}>
+							Confirm
+						</div>
+
+
 					</div>
-					{showMenu && (
-						<div className={styles.dropdownmenu} onClick={() => setShowMenu(false)}>
-							<ul>
-								<li onClick={() => {
-									setCurrency("TKN1")
-									setContract(0)
-									setToken("TKN1")
-								}}>TKN1</li>
-								<li onClick={() => {
-									setCurrency("TKN2")
-									setContract(1);
-									setToken("TKN2")
-								}}>TKN2</li>
-							</ul>
-						</div>
-					)}
+
+					<Modal isOpen={!!router.query.loading} style={customStyles}>
+						<TransactionLoader />
+					</Modal>
 				</div>
-				<div className={style.transferPropContainer}>
-					<input
-						type='text'
-						className={style.transferPropInput}
-						placeholder='Enter Receiver address...'
-						onChange={e => handleChange(e, 'addressTo')}
-					/>
-					<div className={style.currencySelector}></div>
-				</div>
-
-
-				<div onClick={e => handleSubmit(e)} className={style.confirmButton}>
-					Confirm
-				</div>
-
-
-			</div>
-
-			<Modal isOpen={!!router.query.loading} style={customStyles}>
-				<TransactionLoader />
-			</Modal>
+			)}
 		</div >
 	)
 }

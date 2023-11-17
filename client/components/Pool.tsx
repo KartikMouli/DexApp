@@ -16,8 +16,6 @@ Modal.setAppElement('#__next')
 interface MainProps {
 	Account: string;
 	CPAMMContract: ethers.Contract | null;
-	ERC20_1Contract: ethers.Contract | null;
-	ERC20_2Contract: ethers.Contract | null;
 	Provider: ethers.providers.Web3Provider | null;
 }
 
@@ -51,28 +49,8 @@ const customStyles = {
 	},
 }
 
-const Pool: NextPage<MainProps> = ({ Account, CPAMMContract }) => {
-	// const { formData, handleChange, sendTransaction } =
-	// 	useContext(TransactionContext)
+const Pool: NextPage<MainProps> = ({ Account, CPAMMContract,Provider }) => {
 	const router = useRouter()
-
-	// const handleSubmit = async (e: any) => {
-	// 	const { addressTo, amount } = formData
-	// 	e.preventDefault()
-
-	// 	if (!addressTo || !amount) return
-
-	// 	sendTransaction()
-	// }
-
-	// const [currency, setCurrency] = useState("TKN1");
-	// const [showMenu, setShowMenu] = useState(false);
-
-	// function handleClick() {
-	// 	setShowMenu(prev => {
-	// 		return !prev
-	// 	})
-	// }
 
 	const [reserve1, setReserve1] = useState(0);
 	const [reserve2, setReserve2] = useState(0);

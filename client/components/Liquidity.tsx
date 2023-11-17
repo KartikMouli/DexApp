@@ -59,7 +59,9 @@ const Liquidity: NextPage<MainProps> = ({ Account, CPAMMContract, ERC20_1Contrac
   const [calAmount, setCalAmount] = useState(0);
   const [result1, setResult1] = useState(0);
   const [result2, setResult2] = useState(0);
+  const [loading, setLoading] = useState(false);
 
+  console.log(result1, result2, amount, calAmount);
 
 
   const [currency1, setCurrency1] = useState("TKN1");
@@ -111,12 +113,7 @@ const Liquidity: NextPage<MainProps> = ({ Account, CPAMMContract, ERC20_1Contrac
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    // const { addressTo, amount } = formData;
-    console.log(reserve1);
-    console.log(reserve2);
-    console.log(amount)
-    console.log(calAmount);
-
+    setLoading(true);
     if (currency1 === currency2) {
       alert("Select Different Currencies to add Liquidity !");
       return;
@@ -127,15 +124,19 @@ const Liquidity: NextPage<MainProps> = ({ Account, CPAMMContract, ERC20_1Contrac
     } else if (currency1 === "TKN2") {
       CPAMMContract?.addLiquidity(Number(calAmount), Number(amount));
     }
+    setLoading(false);
 
   }
 
   const handleApprove = async (e: any) => {
-    const { addressTo, amount } = formData;
     e.preventDefault();
+    setLoading(true);
 
-    await ERC20_1Contract?.approve('0xCd8493Ea692f034F792e578e1f5ae90d1209b687', Number(9999999));
-    await ERC20_2Contract?.approve('0xCd8493Ea692f034F792e578e1f5ae90d1209b687', Number(9999999));
+    const { addressTo, amount } = formData;
+
+    await ERC20_1Contract?.approve('0xf2389CB94b348ea0614ecE169eDEEE45c7175e2f', Number(9999999));
+    await ERC20_2Contract?.approve('0xf2389CB94b348ea0614ecE169eDEEE45c7175e2f', Number(9999999));
+    setLoading(false);
 
   };
 
@@ -152,7 +153,6 @@ const Liquidity: NextPage<MainProps> = ({ Account, CPAMMContract, ERC20_1Contrac
   }
 
 
-  // console.log(calAmount)
   async function getRes() {
     const res1 = await CPAMMContract?.getReserve0();
     const res2 = await CPAMMContract?.getReserve1();
@@ -167,12 +167,18 @@ const Liquidity: NextPage<MainProps> = ({ Account, CPAMMContract, ERC20_1Contrac
   useEffect(() => {
     let cal_amount;
 
-    if (currency1 === 'TKN1') {
-      cal_amount = (result2 * amount) / result1;
+    if (reserve1 != 0 && reserve2 != 0) {
+      if (currency1 === 'TKN1') {
+        cal_amount = (result2 * amount) / result1;
+      }
+      else if (currency1 === 'TKN2') {
+        cal_amount = (result1 * amount) / result2;
+      }
     }
-    else if (currency1 === 'TKN2') {
-      cal_amount = (result1 * amount) / result2;
+    else {
+      cal_amount = amount;
     }
+
     setCalAmount(Number(cal_amount))
   }, [amount])
 
@@ -182,82 +188,87 @@ const Liquidity: NextPage<MainProps> = ({ Account, CPAMMContract, ERC20_1Contrac
 
   return (
     <div className={style.wrapper}>
-      <div className={style.content}>
-        <div className={style.formHeader}>
-          <div className=' w-screen flex justify-between'><div>Liquidity</div><div>TKN1: {reserve1} &nbsp; TKN2: {reserve2}</div></div>
-        </div>
-        <div className={style.transferPropContainer}>
-          <input
-            type='text'
-            className={style.transferPropInput}
-            placeholder='Enter amount'
-            pattern='^[0-9]*[.,]?[0-9]*$'
-            // onChange={e => handleChange(e, 'amount')}
-            onChange={getCalValue}
-          />
-          <div className={style.currencySelector} onClick={handleClick1}>
-            <div className={style.currencySelectorContent}>
-              <div className={style.currencySelectorIcon}>
-                <Image src={ethLogo} alt='eth logo' height={20} width={20} />
+      {loading && <TransactionLoader />}
+      {!loading && (
+        <div>
+          <div className={style.content}>
+            <div className={style.formHeader}>
+              <div className=' w-screen flex justify-between'><div>Liquidity</div><div>TKN1: {reserve1} &nbsp; TKN2: {reserve2}</div></div>
+            </div>
+            <div className={style.transferPropContainer}>
+              <input
+                type='text'
+                className={style.transferPropInput}
+                placeholder='Enter amount'
+                pattern='^[0-9]*[.,]?[0-9]*$'
+                // onChange={e => handleChange(e, 'amount')}
+                onChange={getCalValue}
+              />
+              <div className={style.currencySelector} onClick={handleClick1}>
+                <div className={style.currencySelectorContent}>
+                  <div className={style.currencySelectorIcon}>
+                    <Image src={ethLogo} alt='eth logo' height={20} width={20} />
+                  </div>
+                  <div className={style.currencySelectorTicker}>{currency1}</div>
+                  <AiOutlineDown className={style.currencySelectorArrow} />
+                </div>
               </div>
-              <div className={style.currencySelectorTicker}>{currency1}</div>
-              <AiOutlineDown className={style.currencySelectorArrow} />
+              {showMenu1 && (
+                <div className={styles.dropdownmenu} onClick={() => setShowMenu1(false)}>
+                  <ul>
+                    <li onClick={() => {
+                      setCurrency1("TKN1")
+                      setCurrency2("TKN2")
+                      setContract(0)
+                    }}>TKN1</li>
+                    <li onClick={() => {
+                      setCurrency1("TKN2")
+                      setCurrency2("TKN1")
+                      setContract(1)
+                    }}>TKN2</li>
+                  </ul>
+                </div>
+              )}
             </div>
-          </div>
-          {showMenu1 && (
-            <div className={styles.dropdownmenu} onClick={() => setShowMenu1(false)}>
-              <ul>
-                <li onClick={() => {
-                  setCurrency1("TKN1")
-                  setCurrency2("TKN2")
-                  setContract(0)
-                }}>TKN1</li>
-                <li onClick={() => {
-                  setCurrency1("TKN2")
-                  setCurrency2("TKN1")
-                  setContract(1)
-                }}>TKN2</li>
-              </ul>
-            </div>
-          )}
-        </div>
-        <div className={style.transferPropContainer}>
-          <input
-            type='text'
-            className={style.transferPropInput}
-            placeholder='0.0'
-            pattern='^[0-9]*[.,]?[0-9]*$'
-            // onChange={e => handleChange(e, 'addressTo')}
-            readOnly
-            value={calAmount}
-          />
-          <div className={style.currencySelector} onClick={handleClick}>
-            <div className={style.currencySelectorContent}>
-              <div className={style.currencySelectorIcon}>
-                <Image src={ethLogo} alt='eth logo' height={20} width={20} />
+            <div className={style.transferPropContainer}>
+              <input
+                type='text'
+                className={style.transferPropInput}
+                placeholder='0.0'
+                pattern='^[0-9]*[.,]?[0-9]*$'
+                // onChange={e => handleChange(e, 'addressTo')}
+                readOnly
+                value={calAmount !== calAmount ? 0.0 : calAmount}
+              />
+              <div className={style.currencySelector} onClick={handleClick}>
+                <div className={style.currencySelectorContent}>
+                  <div className={style.currencySelectorIcon}>
+                    <Image src={ethLogo} alt='eth logo' height={20} width={20} />
+                  </div>
+                  <div className={style.currencySelectorTicker}>{currency2}</div>
+                  {/* <AiOutlineDown className={style.currencySelectorArrow} /> */}
+                </div>
               </div>
-              <div className={style.currencySelectorTicker}>{currency2}</div>
-              {/* <AiOutlineDown className={style.currencySelectorArrow} /> */}
-            </div>
-          </div>
-          {/* {showMenu && (
+              {/* {showMenu && (
                         <div className={styles.dropdownmenu} onClick={() => setShowMenu(false)}>
                         </div>
                     )} */}
-        </div >
-        <div className='flex justify-between'>
-          <div onClick={e => handleSubmit(e)} className={style.confirmButton}>
-            Submit
+            </div >
+            <div className='flex justify-between'>
+              <div onClick={e => handleSubmit(e)} className={style.confirmButton}>
+                Submit
+              </div>
+              <div onClick={e => handleApprove(e)} className={style.confirmButton}>
+                Approve
+              </div>
+            </div>
           </div>
-          <div onClick={e => handleApprove(e)} className={style.confirmButton}>
-            Approve
-          </div>
-        </div>
-      </div>
 
-      <Modal isOpen={!!router.query.loading} style={customStyles}>
-        <TransactionLoader />
-      </Modal>
+          <Modal isOpen={!!router.query.loading} style={customStyles}>
+            <TransactionLoader />
+          </Modal>
+        </div>
+      )}
     </div>
   )
 }
