@@ -16,9 +16,6 @@ const style = {
 }
 const Home: NextPage = () => {
   const [Account, setAccount] = useState<string>("");
-  const [flag, setFlag] = useState(0);
-
-  const [Contract, setContract] = useState<ethers.Contract | null>(null);
   const [CPAMMContract, setCPAMMContract] = useState<ethers.Contract | null>(null);
 
   const [ERC20_1Contract, setERC20_1Contract] = useState<ethers.Contract | null>(null);
@@ -27,7 +24,7 @@ const Home: NextPage = () => {
   const [Provider, setProvider] = useState<ethers.providers.Web3Provider | null>(null);
   const [token, setToken] = useState<string>("TKN1")
 
-  const [currPage, setCurrPage] = useState('send');
+  const [currPage, setCurrPage] = useState<string>("send");
 
 
   useEffect(() => {
@@ -49,13 +46,13 @@ const Home: NextPage = () => {
         await provider.send('eth_requestAccounts', []);
         const signer = await provider.getSigner();
         const address = await signer.getAddress();
-        
+
 
         const ERC20_0contractAddress = '0x42d007E66728979dA89572511196Cd7cCc6AD85e';
         const ERC20_1contractAddress = '0xEc4940b3859Fa34b78c4F2f4B3F4293CE92F1053';
         const CPAMM_ContractAddress = "0xf2389CB94b348ea0614ecE169eDEEE45c7175e2f";
 
-        
+
 
         const ERC20_0contract = new ethers.Contract(
           ERC20_0contractAddress,
@@ -83,7 +80,7 @@ const Home: NextPage = () => {
         setERC20_2Contract(ERC20_1contract);
 
         setProvider(provider);
-        
+
       }
     };
 
@@ -93,11 +90,11 @@ const Home: NextPage = () => {
 
   return (
     <div className={style.wrapper}>
-      <Header ERC20_1Contract={ERC20_1Contract} ERC20_2Contract={ERC20_2Contract} Provider = {Provider} Account = {Account} currPage = {currPage} setCurrPage = {setCurrPage} token = {token} flag={flag} setFlag={setFlag} />
-      {currPage === "send" && <Main Account = {Account} ERC20_1Contract={ERC20_1Contract} ERC20_2Contract={ERC20_2Contract} Provider = {Provider} token = {token} setToken = {setToken}  />}
-      {currPage === "swap" && <Swap Account = {Account} CPAMMContract = {CPAMMContract} ERC20_1Contract={ERC20_1Contract} ERC20_2Contract={ERC20_2Contract} Provider = {Provider}/>}
-      {currPage === "pool" && <Pool Account={Account} CPAMMContract = {CPAMMContract} Provider={Provider} />}
-      {currPage === "liquidity" && <Liquidity Account = {Account} CPAMMContract = {CPAMMContract} ERC20_1Contract={ERC20_1Contract} ERC20_2Contract={ERC20_2Contract} Provider = {Provider} />}
+      <Header ERC20_1Contract={ERC20_1Contract} ERC20_2Contract={ERC20_2Contract} Provider={Provider} Account={Account} setCurrPage={setCurrPage} token={token} />
+      {currPage === "send" && <Main Account={Account} ERC20_1Contract={ERC20_1Contract} ERC20_2Contract={ERC20_2Contract} setToken={setToken} />}
+      {currPage === "swap" && <Swap CPAMMContract={CPAMMContract} />}
+      {currPage === "pool" && <Pool CPAMMContract={CPAMMContract} />}
+      {currPage === "liquidity" && <Liquidity Account={Account} CPAMMContract={CPAMMContract} ERC20_1Contract={ERC20_1Contract} ERC20_2Contract={ERC20_2Contract} Provider={Provider} />}
       <TransactionHistory />
     </div>
   )

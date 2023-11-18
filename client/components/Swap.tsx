@@ -1,5 +1,4 @@
 import Image from 'next/image'
-import { RiSettings3Fill } from 'react-icons/ri'
 import { AiOutlineDown } from 'react-icons/ai'
 import ethLogo from '../assets/eth.png'
 import { useContext, useState, useEffect } from 'react'
@@ -45,14 +44,12 @@ const customStyles = {
 }
 
 interface MainProps {
-    Account: string;
+
     CPAMMContract: ethers.Contract | null;
-    ERC20_1Contract: ethers.Contract | null;
-    ERC20_2Contract: ethers.Contract | null;
-    Provider: ethers.providers.Web3Provider | null;
+
 }
 
-const Swap: NextPage<MainProps> = ({ Account, CPAMMContract, ERC20_1Contract, ERC20_2Contract, Provider }) => {
+const Swap: NextPage<MainProps> = ({ CPAMMContract }) => {
 
     const [amount, setAmount] = useState(0);
     const [contract, setContract] = useState(0);
@@ -79,7 +76,6 @@ const Swap: NextPage<MainProps> = ({ Account, CPAMMContract, ERC20_1Contract, ER
 
     const handleSubmit = async (e: any) => {
         e.preventDefault()
-        // const { addressTo, amount } = formData
         setLoading(true);
 
         if (contract) {
@@ -90,6 +86,7 @@ const Swap: NextPage<MainProps> = ({ Account, CPAMMContract, ERC20_1Contract, ER
         }
 
         setLoading(false);
+        alert("Transaction Completed !");
 
     }
 
@@ -130,7 +127,7 @@ const Swap: NextPage<MainProps> = ({ Account, CPAMMContract, ERC20_1Contract, ER
         setCalAmount(cal_amount);
     }, [amount])
 
-    async function whenKeyUpped(e) {
+    async function whenKeyUpped(e: any) {
         setAmount(e.target.value);
 
     }
@@ -196,13 +193,10 @@ const Swap: NextPage<MainProps> = ({ Account, CPAMMContract, ERC20_1Contract, ER
                                         <Image src={ethLogo} alt='eth logo' height={20} width={20} />
                                     </div>
                                     <div className={style.currencySelectorTicker}>{currency2}</div>
-                                    {/* <AiOutlineDown className={style.currencySelectorArrow} /> */}
+
                                 </div>
                             </div>
-                            {/* {showMenu && (
-                        <div className={styles.dropdownmenu} onClick={() => setShowMenu(false)}>
-                        </div>
-                    )} */}
+
                         </div>
                         <div onClick={e => handleSubmit(e)} className={style.confirmButton}>
                             Swap

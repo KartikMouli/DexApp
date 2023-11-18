@@ -1,22 +1,16 @@
-import Image from 'next/image'
-import { RiSettings3Fill } from 'react-icons/ri'
-import { AiOutlineDown } from 'react-icons/ai'
-import ethLogo from '../assets/eth.png'
 import { useContext, useState, useEffect } from 'react'
-import { TransactionContext } from '../context/TransactionContext'
+
 import Modal from 'react-modal'
 import { useRouter } from 'next/router'
 import TransactionLoader from './TransactionLoader'
-import styles from "./Main.module.css"
+
 import { ethers } from "ethers";
 import { NextPage } from "next";
 
 Modal.setAppElement('#__next')
 
 interface MainProps {
-	Account: string;
 	CPAMMContract: ethers.Contract | null;
-	Provider: ethers.providers.Web3Provider | null;
 }
 
 const style = {
@@ -49,7 +43,7 @@ const customStyles = {
 	},
 }
 
-const Pool: NextPage<MainProps> = ({ Account, CPAMMContract,Provider }) => {
+const Pool: NextPage<MainProps> = ({ CPAMMContract}) => {
 	const router = useRouter()
 
 	const [reserve1, setReserve1] = useState(0);

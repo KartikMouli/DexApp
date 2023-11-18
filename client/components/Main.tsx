@@ -1,5 +1,4 @@
 import Image from 'next/image'
-import { RiSettings3Fill } from 'react-icons/ri'
 import { AiOutlineDown } from 'react-icons/ai'
 import ethLogo from '../assets/eth.png'
 import { useContext, useState } from 'react'
@@ -10,6 +9,7 @@ import TransactionLoader from './TransactionLoader'
 import styles from "./Main.module.css"
 import { ethers } from 'ethers';
 import { NextPage } from 'next'
+import { Dispatch, SetStateAction } from 'react';
 
 
 Modal.setAppElement('#__next')
@@ -30,9 +30,9 @@ const style = {
 
 interface MainProps {
 	Account: string;
+	setToken:Dispatch<SetStateAction<string>>,
 	ERC20_1Contract: ethers.Contract | null;
 	ERC20_2Contract: ethers.Contract | null;
-	Provider: ethers.providers.Web3Provider | null;
 }
 
 const customStyles = {
@@ -51,7 +51,7 @@ const customStyles = {
 	},
 }
 
-const Main: NextPage<MainProps> = ({ ERC20_1Contract, ERC20_2Contract, Provider, Account, token, setToken }) => {
+const Main: NextPage<MainProps> = ({ ERC20_1Contract, ERC20_2Contract, Account, setToken }) => {
 	const { formData, handleChange, saveTransaction } =
 		useContext(TransactionContext)
 	const router = useRouter()
@@ -93,6 +93,7 @@ const Main: NextPage<MainProps> = ({ ERC20_1Contract, ERC20_2Contract, Provider,
 			)
 		}
 		setLoading(false);
+		alert("Transaction Completed !");
 
 	}
 

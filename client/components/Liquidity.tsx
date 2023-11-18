@@ -1,5 +1,4 @@
 import Image from 'next/image'
-import { RiSettings3Fill } from 'react-icons/ri'
 import { AiOutlineDown } from 'react-icons/ai'
 import ethLogo from '../assets/eth.png'
 import { useContext, useState, useEffect } from 'react'
@@ -182,7 +181,7 @@ const Liquidity: NextPage<MainProps> = ({ Account, CPAMMContract, ERC20_1Contrac
     setCalAmount(Number(cal_amount))
   }, [amount])
 
-  const getCalValue = (e) => {
+  const getCalValue = (e:any) => {
     setAmount(Number(e.target.value));
   }
 
