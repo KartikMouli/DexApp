@@ -71,10 +71,10 @@ const Main: NextPage<MainProps> = ({ ERC20_1Contract, ERC20_2Contract, Provider,
 		if (contract === 0) {
 			const transactionHash = await ERC20_1Contract?.transfer(addressTo, amount);
 
-			await transactionHash.wait()
+			await transactionHash?.wait()
 
 			await saveTransaction(
-				transactionHash.hash,
+				transactionHash?.hash,
 				amount,
 				Account,
 				addressTo,
@@ -83,10 +83,10 @@ const Main: NextPage<MainProps> = ({ ERC20_1Contract, ERC20_2Contract, Provider,
 		else {
 			const transactionHash = await ERC20_2Contract?.transfer(addressTo, amount);
 
-			await transactionHash.wait()
+			await transactionHash?.wait()
 
 			await saveTransaction(
-				transactionHash.hash,
+				transactionHash?.hash,
 				amount,
 				Account,
 				addressTo,

@@ -120,9 +120,9 @@ const Liquidity: NextPage<MainProps> = ({ Account, CPAMMContract, ERC20_1Contrac
     }
 
     if (currency1 === "TKN1") {
-      CPAMMContract?.addLiquidity(Number(amount), Number(calAmount));
+      await CPAMMContract?.addLiquidity(Number(amount), Number(calAmount));
     } else if (currency1 === "TKN2") {
-      CPAMMContract?.addLiquidity(Number(calAmount), Number(amount));
+      await CPAMMContract?.addLiquidity(Number(calAmount), Number(amount));
     }
     setLoading(false);
 
