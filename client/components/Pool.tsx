@@ -14,9 +14,7 @@ import { NextPage } from "next";
 Modal.setAppElement('#__next')
 
 interface MainProps {
-	Account: string;
 	CPAMMContract: ethers.Contract | null;
-	Provider: ethers.providers.Web3Provider | null;
 }
 
 const style = {
@@ -49,7 +47,7 @@ const customStyles = {
 	},
 }
 
-const Pool: NextPage<MainProps> = ({ Account, CPAMMContract,Provider }) => {
+const Pool: NextPage<MainProps> = ({ CPAMMContract }) => {
 	const router = useRouter()
 
 	const [reserve1, setReserve1] = useState(0);

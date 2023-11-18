@@ -31,10 +31,13 @@ interface MainProps {
 	ERC20_1Contract: ethers.Contract | null;
 	ERC20_2Contract: ethers.Contract | null;
 	Provider: ethers.providers.Web3Provider | null;
+	currPage: string;
+	setCurrPage: React.Dispatch<React.SetStateAction<string>>;
+	token: string;
 }
 
 
-const Header: NextPage<MainProps> = ({ ERC20_1Contract, ERC20_2Contract, Account, currPage, setCurrPage, token, flag, setFlag }) => {
+const Header: NextPage<MainProps> = ({ ERC20_1Contract, ERC20_2Contract, Account, currPage, setCurrPage, token}) => {
 
 	const [selectedNav, setSelectedNav] = useState('send')
 	const [userName, setUserName] = useState<string>()
@@ -103,7 +106,6 @@ const Header: NextPage<MainProps> = ({ ERC20_1Contract, ERC20_2Contract, Account
 						onClick={() => {
 							setSelectedNav('swap')
 							setCurrPage("swap")
-							setFlag(2)
 						}}
 						className={`${style.navItem} ${selectedNav === 'swap' && style.activeNavItem
 							}`}
@@ -114,7 +116,6 @@ const Header: NextPage<MainProps> = ({ ERC20_1Contract, ERC20_2Contract, Account
 						onClick={() => {
 							setSelectedNav('pool')
 							setCurrPage("pool")
-							setFlag(2)
 						}}
 						className={`${style.navItem} ${selectedNav === 'pool' && style.activeNavItem
 							}`}
@@ -125,7 +126,6 @@ const Header: NextPage<MainProps> = ({ ERC20_1Contract, ERC20_2Contract, Account
 						onClick={() => {
 							setSelectedNav('liquidity')
 							setCurrPage("liquidity")
-							setFlag(2)
 						}
 						}
 						className={`${style.navItem} ${selectedNav === 'liquidity' && style.activeNavItem

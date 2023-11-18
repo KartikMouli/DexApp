@@ -45,14 +45,10 @@ const customStyles = {
 }
 
 interface MainProps {
-    Account: string;
     CPAMMContract: ethers.Contract | null;
-    ERC20_1Contract: ethers.Contract | null;
-    ERC20_2Contract: ethers.Contract | null;
-    Provider: ethers.providers.Web3Provider | null;
 }
 
-const Swap: NextPage<MainProps> = ({ Account, CPAMMContract, ERC20_1Contract, ERC20_2Contract, Provider }) => {
+const Swap: NextPage<MainProps> = ({ CPAMMContract }) => {
 
     const [amount, setAmount] = useState(0);
     const [contract, setContract] = useState(0);
@@ -130,7 +126,7 @@ const Swap: NextPage<MainProps> = ({ Account, CPAMMContract, ERC20_1Contract, ER
         setCalAmount(cal_amount);
     }, [amount])
 
-    async function whenKeyUpped(e) {
+    async function whenKeyUpped(e: any) {
         setAmount(e.target.value);
 
     }

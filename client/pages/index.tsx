@@ -93,10 +93,10 @@ const Home: NextPage = () => {
 
   return (
     <div className={style.wrapper}>
-      <Header ERC20_1Contract={ERC20_1Contract} ERC20_2Contract={ERC20_2Contract} Provider = {Provider} Account = {Account} currPage = {currPage} setCurrPage = {setCurrPage} token = {token} flag={flag} setFlag={setFlag} />
-      {currPage === "send" && <Main Account = {Account} ERC20_1Contract={ERC20_1Contract} ERC20_2Contract={ERC20_2Contract} Provider = {Provider} token = {token} setToken = {setToken}  />}
-      {currPage === "swap" && <Swap Account = {Account} CPAMMContract = {CPAMMContract} ERC20_1Contract={ERC20_1Contract} ERC20_2Contract={ERC20_2Contract} Provider = {Provider}/>}
-      {currPage === "pool" && <Pool Account={Account} CPAMMContract = {CPAMMContract} Provider={Provider} />}
+      <Header ERC20_1Contract={ERC20_1Contract} ERC20_2Contract={ERC20_2Contract} Provider = {Provider} Account = {Account} currPage = {currPage} setCurrPage = {setCurrPage} token = {token}/>
+      {currPage === "send" && <Main Account = {Account} ERC20_1Contract={ERC20_1Contract} ERC20_2Contract={ERC20_2Contract} token = {token} setToken = {setToken}  />}
+      {currPage === "swap" && <Swap CPAMMContract = {CPAMMContract}/>}
+      {currPage === "pool" && <Pool CPAMMContract = {CPAMMContract} />}
       {currPage === "liquidity" && <Liquidity Account = {Account} CPAMMContract = {CPAMMContract} ERC20_1Contract={ERC20_1Contract} ERC20_2Contract={ERC20_2Contract} Provider = {Provider} />}
       <TransactionHistory />
     </div>
