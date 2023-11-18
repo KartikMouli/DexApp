@@ -5,9 +5,9 @@ import {schemaTypes} from './schemas'
 
 export default defineConfig({
   name: 'default',
-  title: 'dexApp',
+  title: 'DexApp',
 
-  projectId: process.env.SANITY_PROJECT_ID,
+  projectId: 'yq7gabb5',
   dataset: 'production',
 
   plugins: [deskTool(), visionTool()],

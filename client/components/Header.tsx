@@ -69,7 +69,7 @@ const Header: NextPage<MainProps> = ({ ERC20_1Contract, ERC20_2Contract, Account
         `
 				const clientRes = await client.fetch(query)
 				console.log(clientRes)
-				if (!(clientRes[0].userName == 'Unnamed')) {
+				if (!(clientRes[0]?.userName == 'Unnamed')) {
 					setUserName(clientRes[0].userName)
 				} else {
 					setUserName(
@@ -79,7 +79,8 @@ const Header: NextPage<MainProps> = ({ ERC20_1Contract, ERC20_2Contract, Account
 			})()
 
 		}
-	}, [currentAccount])
+		handleBalance();
+	}, [currentAccount, token])
 
 	return (
 		<div className={style.wrapper}>
