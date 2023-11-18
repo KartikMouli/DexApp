@@ -7,7 +7,7 @@ export default defineConfig({
   name: 'default',
   title: 'dexApp',
 
-  projectId: '6pcp9wya',
+  projectId: process.env.SANITY_PROJECT_ID,
   dataset: 'production',
 
   plugins: [deskTool(), visionTool()],
