@@ -86,8 +86,7 @@ const Swap: NextPage<MainProps> = ({ CPAMMContract }) => {
         }
 
         setLoading(false);
-        alert("Transaction Completed !");
-
+        return alert("Transaction Completed !");
     }
 
 

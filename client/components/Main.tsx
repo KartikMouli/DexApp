@@ -11,7 +11,6 @@ import { ethers } from 'ethers';
 import { NextPage } from 'next'
 import { Dispatch, SetStateAction } from 'react';
 
-
 Modal.setAppElement('#__next')
 
 const style = {
@@ -93,8 +92,8 @@ const Main: NextPage<MainProps> = ({ ERC20_1Contract, ERC20_2Contract, Account, 
 			)
 		}
 		setLoading(false);
-		alert("Transaction Completed !");
-
+		
+		return alert("Transaction Completed !");
 	}
 
 

@@ -71,8 +71,7 @@ const Liquidity: NextPage<MainProps> = ({ Account, CPAMMContract, ERC20_1Contrac
   const [reserve1, setreserve1] = useState<number | null>();
   const [reserve2, setreserve2] = useState<number | null>();
 
-  const ERC20_0contractAddress = '0x42d007E66728979dA89572511196Cd7cCc6AD85e';
-  const ERC20_1contractAddress = '0xEc4940b3859Fa34b78c4F2f4B3F4293CE92F1053';
+  
 
   const { formData, handleChange, sendTransaction } =
     useContext(TransactionContext)
@@ -113,11 +112,7 @@ const Liquidity: NextPage<MainProps> = ({ Account, CPAMMContract, ERC20_1Contrac
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     setLoading(true);
-    if (currency1 === currency2) {
-      alert("Select Different Currencies to add Liquidity !");
-      return;
-    }
-
+    
     if (currency1 === "TKN1") {
       await CPAMMContract?.addLiquidity(Number(amount), Number(calAmount));
     } else if (currency1 === "TKN2") {
@@ -125,13 +120,14 @@ const Liquidity: NextPage<MainProps> = ({ Account, CPAMMContract, ERC20_1Contrac
     }
     setLoading(false);
 
+    return alert("Transaction Completed !");
+
   }
 
   const handleApprove = async (e: any) => {
     e.preventDefault();
     setLoading(true);
 
-    const { addressTo, amount } = formData;
 
     await ERC20_1Contract?.approve('0xf2389CB94b348ea0614ecE169eDEEE45c7175e2f', Number(9999999));
     await ERC20_2Contract?.approve('0xf2389CB94b348ea0614ecE169eDEEE45c7175e2f', Number(9999999));
