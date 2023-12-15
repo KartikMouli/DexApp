@@ -1,8 +1,6 @@
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import { FiArrowUpRight } from 'react-icons/fi'
-import { AiOutlineDown } from 'react-icons/ai'
-import { HiOutlineDotsVertical } from 'react-icons/hi'
 import ethLogo from '../assets/eth.png'
 import uniswapLogo from '../assets/uniswap.png'
 import { useContext } from 'react'
@@ -10,6 +8,7 @@ import { TransactionContext } from '../context/TransactionContext'
 import { client } from '../lib/sanityClient'
 import { NextPage } from 'next'
 import { ethers } from 'ethers';
+import { Dispatch, SetStateAction } from 'react';
 
 const style = {
 	wrapper: `p-4 w-screen flex justify-between items-center`,
@@ -28,6 +27,8 @@ const style = {
 
 interface MainProps {
 	Account: string;
+	token:string;
+	setCurrPage:Dispatch<SetStateAction<string>>,
 	ERC20_1Contract: ethers.Contract | null;
 	ERC20_2Contract: ethers.Contract | null;
 	Provider: ethers.providers.Web3Provider | null;
@@ -37,15 +38,13 @@ interface MainProps {
 }
 
 
-const Header: NextPage<MainProps> = ({ ERC20_1Contract, ERC20_2Contract, Account, currPage, setCurrPage, token}) => {
+const Header: NextPage<MainProps> = ({ ERC20_1Contract, ERC20_2Contract, Account, setCurrPage, token }) => {
 
 	const [selectedNav, setSelectedNav] = useState('send')
 	const [userName, setUserName] = useState<string>()
 	const { connectWallet, currentAccount } = useContext(TransactionContext)
 	const [balanceAmount, setBalanceAmount] = useState<number | null>(null);
 	const [showBalance, setShowBalance] = useState(false);
-
-
 
 
 	const handleBalance = async () => {
@@ -149,11 +148,7 @@ const Header: NextPage<MainProps> = ({ ERC20_1Contract, ERC20_2Contract, Account
 					<div className={style.buttonIconContainer}>
 						<Image src={ethLogo} alt='eth logo' height={20} width={20} />
 					</div>
-					<p>Ethereum</p>
-					<div className={style.buttonIconContainer}>
-						<AiOutlineDown />
-					</div>
-
+					<p>Sepolia</p>
 				</div>
 				{currentAccount ? (
 					<div className={`${style.button} ${style.buttonPadding}`}>
