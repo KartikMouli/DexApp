@@ -4,6 +4,6 @@ export const client = sanityClient({
   projectId: 'yq7gabb5' ,
   dataset: 'production',
   apiVersion: 'v1',
-  token:'skW2wdRFWv3RZahVgE8ZofpxeH6AZIEQI5QHHRDQ5oauzkcCrFbjnTbj10Y1J3lQy3Hbci9Ij0Rakg9KXFDEgqNDqnfHD2NUMGCx8b3yKLBZj24BSfMKsnFngIYcShsSPJ5pYErfa6dwdyCiLgrxTbuLE5yEIUrhaUD29FR7nFHTaxuQhpSC',
+  token:'skT18MONloKK4CyC1aNCJRVkigWHpkjMJgTMs8kwn5ZG4NqRJ0vHnmezueaj34oNKmt0wUZSvRvuql9DC2fKrplvxJ6pxIfEGVCaHZSfmh5wxc62nAgkCcHV6597VrY3AVRRzJQe6zdumG2JKxLLMllCeSLnHtjx7PLFhnZmZcwNgNXIiw5Z',
   useCdn: false,
 })
