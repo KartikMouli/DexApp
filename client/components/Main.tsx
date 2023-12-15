@@ -31,7 +31,6 @@ interface MainProps {
 	Account: string;
 	ERC20_1Contract: ethers.Contract | null;
 	ERC20_2Contract: ethers.Contract | null;
-	token:string;
 	setToken:React.Dispatch<React.SetStateAction<string>>;
 }
 
@@ -51,7 +50,7 @@ const customStyles = {
 	},
 }
 
-const Main: NextPage<MainProps> = ({ ERC20_1Contract, ERC20_2Contract, Account, token, setToken }) => {
+const Main: NextPage<MainProps> = ({ ERC20_1Contract, ERC20_2Contract, Account, setToken }) => {
 	const { formData, handleChange, saveTransaction } =
 		useContext(TransactionContext)
 	const router = useRouter()

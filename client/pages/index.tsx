@@ -90,7 +90,7 @@ const Home: NextPage = () => {
 
   return (
     <div className={style.wrapper}>
-      <Header ERC20_1Contract={ERC20_1Contract} ERC20_2Contract={ERC20_2Contract} Provider={Provider} Account={Account} setCurrPage={setCurrPage} token={token} />
+      <Header ERC20_1Contract={ERC20_1Contract} ERC20_2Contract={ERC20_2Contract} Account={Account} setCurrPage={setCurrPage} token={token} />
       {currPage === "send" && <Main Account={Account} ERC20_1Contract={ERC20_1Contract} ERC20_2Contract={ERC20_2Contract} setToken={setToken} />}
       {currPage === "swap" && <Swap CPAMMContract={CPAMMContract} />}
       {currPage === "pool" && <Pool CPAMMContract={CPAMMContract} />}

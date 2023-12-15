@@ -26,11 +26,9 @@ const style = {
 }
 
 interface MainProps {
-	Account: string;
 	ERC20_1Contract: ethers.Contract | null;
 	ERC20_2Contract: ethers.Contract | null;
-	Provider: ethers.providers.Web3Provider | null;
-	currPage: string;
+	Account: string;
 	setCurrPage: React.Dispatch<React.SetStateAction<string>>;
 	token: string;
 }
