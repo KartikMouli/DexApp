@@ -29,7 +29,6 @@ const style = {
 
 interface MainProps {
 	Account: string;
-	setToken:Dispatch<SetStateAction<string>>,
 	ERC20_1Contract: ethers.Contract | null;
 	ERC20_2Contract: ethers.Contract | null;
 	token:string;
