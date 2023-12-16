@@ -63,7 +63,7 @@ const Pool: NextPage<MainProps> = ({ CPAMMContract }) => {
 
 	useEffect(() => {
 
-
+        console.log(CPAMMContract);
 		callhi();
 
 

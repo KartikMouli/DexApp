@@ -99,6 +99,16 @@ const Header: NextPage<MainProps> = ({ ERC20_1Contract, ERC20_2Contract, Account
 					</div>
 					<div
 						onClick={() => {
+							setSelectedNav('mint')
+							setCurrPage("mint")
+						}}
+						className={`${style.navItem} ${selectedNav === 'mint' && style.activeNavItem
+							}`}
+					>
+						Mint
+					</div>
+					<div
+						onClick={() => {
 							setSelectedNav('swap')
 							setCurrPage("swap")
 						}}
@@ -160,11 +170,11 @@ const Header: NextPage<MainProps> = ({ ERC20_1Contract, ERC20_2Contract, Account
 						</div>
 					</div>
 				)}
-				<div onClick={() => handleBalance()} className={`${style.button} ${style.buttonPadding} px-10`}>
+				{/* <div onClick={() => handleBalance()} className={`${style.button} ${style.buttonPadding} px-10`}>
 					<div className={`${style.buttonIconContainer} mx-6`}>
 						{showBalance ? balanceAmount + " " + token : "Balance"}
 					</div>
-				</div>
+				</div> */}
 			</div>
 		</div>
 	)

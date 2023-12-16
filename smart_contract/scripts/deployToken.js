@@ -4,13 +4,13 @@ const hre = require("hardhat");
 // Token2 deployed to address 0xf451bD175B5d4D64A8E9a46F64150a2D51836d5f
 async function main() {
 
-  const Upload = await hre.ethers.getContractFactory("CPAMM");
-  const upload = await Upload.deploy('0x733Fd671fa49f9D043fe2E5E9e5251AE9e992e4E','0xf451bD175B5d4D64A8E9a46F64150a2D51836d5f');
+  const Token = await hre.ethers.getContractFactory("Token");
+  const token = await Token.deploy(100000);
 
-  await upload.waitForDeployment();
+  await token.waitForDeployment();
 
   console.log(
-    `CPAMM Contract deployed to address ${upload.target}`
+    `Token2 deployed to address ${token.target}`
   );
 }
 

@@ -79,6 +79,19 @@ contract CPAMM {
         _update(token0.balanceOf(address(this)), token1.balanceOf(address(this)));
     }
 
+    function absolute(uint val1,  uint val2) public pure returns (uint abs) { 
+        if(val1 <= val2)
+           abs = val2 - val1;
+        else 
+           abs = val1 - val2;
+    }
+    function max(uint val1,  uint val2) public pure returns (uint mx) { 
+        if(val1 <= val2)
+           mx = val2;
+        else 
+           mx = val1;
+    }
+
     function addLiquidity(uint _amount0, uint _amount1) external returns (uint shares) {
         token0.transferFrom(msg.sender, address(this), _amount0);
         token1.transferFrom(msg.sender, address(this), _amount1);
@@ -99,8 +112,9 @@ contract CPAMM {
         dy = y / x * dx
         */
         
-        if (reserve0 > 0 || reserve1 > 0) {
-            require(reserve0 * _amount1 == reserve1 * _amount0, "x / y != dx / dy");
+         if (reserve0 > 0 || reserve1 > 0) {
+            // require(reserve0 * _amount1 == reserve1 * _amount0, "x / y != dx / dy");
+            require(absolute(reserve0 * _amount1 , reserve1 * _amount0) <= max(reserve0, reserve1) , "x / y != dx / dy");
         }
 
         /*

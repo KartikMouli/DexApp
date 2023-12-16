@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { AiOutlineDown } from "react-icons/ai";
 import ethLogo from "../assets/eth.png";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { TransactionContext } from "../context/TransactionContext";
 import Modal from "react-modal";
 import { useRouter } from "next/router";
@@ -27,7 +27,7 @@ const style = {
   confirmButton: `bg-[#2172E5] my-2 rounded-2xl py-6 px-8 text-xl font-semibold flex justify-center cursor-pointer border border-[#2172E5] hover:border-[#234169]`,
 };
 
-interface MainProps {
+interface MintProps {
   Account: string;
   ERC20_1Contract: ethers.Contract | null;
   ERC20_2Contract: ethers.Contract | null;
@@ -50,7 +50,7 @@ const customStyles = {
   },
 };
 
-const Main: NextPage<MainProps> = ({
+const Mint: NextPage<MintProps> = ({
   ERC20_1Contract,
   ERC20_2Contract,
   Account,
@@ -59,60 +59,67 @@ const Main: NextPage<MainProps> = ({
   const { formData, handleChange, saveTransaction } =
     useContext(TransactionContext);
   const router = useRouter();
-
   const [loading, setLoading] = useState(false);
-
   const [contract, setContract] = useState(0);
+  const [currency, setCurrency] = useState("TKN1");
+  const [showMenu, setShowMenu] = useState(false);
+  const [balanceAmount, setBalanceAmount] = useState<number | null>(null);
+
+  const handleBalance = async () => {
+    let currBalance;
+    if (currency === "TKN1") {
+      currBalance = await ERC20_1Contract?.balanceOf(Account);
+    } else if (currency === "TKN2") {
+      currBalance = await ERC20_2Contract?.balanceOf(Account);
+    }
+    setBalanceAmount(Number(currBalance));
+  };
+
+  useEffect(() => {
+    console.log(ERC20_1Contract);
+    console.log(ERC20_2Contract);
+    console.log(Account);
+    handleBalance();
+  }, [currency]);
 
   const handleSubmit = async (e: any) => {
+    console.log("Hi");
     e.preventDefault();
-    const { addressTo, amount } = formData;
+    // const { addressTo, amount } = formData;
 
-    if (!addressTo || !amount) return;
+    // if (!addressTo || !amount) return;
 
     setLoading(true);
     console.log(loading);
     try {
       if (contract === 0) {
-        const transactionHash = await ERC20_1Contract?.transfer(
-          addressTo,
-          amount
-        );
-
-        await transactionHash?.wait();
-
-        await saveTransaction(
-          transactionHash?.hash,
-          amount,
-          Account,
-          addressTo
-        );
+        const chk = await ERC20_1Contract?.isMintPossible();
+        if (Number(chk) == 0) {
+          alert(
+            "Minting Limit Reached, Please try after some time! Note:10,000 tokens can be minted every 1 hour"
+          );
+        } else {
+          const transactionHash = await ERC20_1Contract?.mint();
+          await transactionHash?.wait();
+        }
       } else {
-        const transactionHash = await ERC20_2Contract?.transfer(
-          addressTo,
-          amount
-        );
-
-        await transactionHash?.wait();
-
-        await saveTransaction(
-          transactionHash?.hash,
-          amount,
-          Account,
-          addressTo
-        );
+        const chk = await ERC20_2Contract?.isMintPossible();
+        if (chk == 0) {
+          alert(
+            "Minting Limit Reached, Please try after some time! Note:10,000 tokens of each type can be minted every 1 hour"
+          );
+        } else {
+          const transactionHash = await ERC20_2Contract?.mint();
+          await transactionHash?.wait();
+        }
       }
-	  alert("Transaction Completed !");
     } catch (err) {
       alert(err);
     }
     setLoading(false);
 
-    
+    return alert("Transaction Completed !");
   };
-
-  const [currency, setCurrency] = useState("TKN1");
-  const [showMenu, setShowMenu] = useState(false);
 
   function handleClick() {
     setShowMenu((prev) => {
@@ -127,15 +134,21 @@ const Main: NextPage<MainProps> = ({
         <div>
           <div className={style.content}>
             <div className={style.formHeader}>
-              <div>Send</div>
+              <div className=" w-screen flex justify-between">
+                <div>Mint</div>
+                <div>
+                  Balance : {balanceAmount} {currency}
+                </div>
+              </div>
             </div>
             <div className={style.transferPropContainer}>
               <input
                 type="text"
                 className={style.transferPropInput}
-                placeholder="0.0"
+                placeholder="10000.00"
                 pattern="^[0-9]*[.,]?[0-9]*$"
                 onChange={(e) => handleChange(e, "amount")}
+                disabled
               />
               <div className={style.currencySelector} onClick={handleClick}>
                 <div className={style.currencySelectorContent}>
@@ -179,21 +192,12 @@ const Main: NextPage<MainProps> = ({
                 </div>
               )}
             </div>
-            <div className={style.transferPropContainer}>
-              <input
-                type="text"
-                className={style.transferPropInput}
-                placeholder="Enter Receiver address..."
-                onChange={(e) => handleChange(e, "addressTo")}
-              />
-              <div className={style.currencySelector}></div>
-            </div>
 
             <div
               onClick={(e) => handleSubmit(e)}
               className={style.confirmButton}
             >
-              Send
+              Mint
             </div>
           </div>
 
@@ -206,4 +210,4 @@ const Main: NextPage<MainProps> = ({
   );
 };
 
-export default Main;
+export default Mint;

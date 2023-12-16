@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "D:\\CS Core Skills on Dev\\BlockChain3.0\\DexApp\\smart_contract\\contracts\\cpamm.sol": {
-      "lastModificationDate": 1702628747599,
-      "contentHash": "512af5953d15438d760e5c3674c5aa16",
+      "lastModificationDate": 1702731142489,
+      "contentHash": "fd4c6aa15d0a9326e378f2bd8831f2b1",
       "sourceName": "contracts/cpamm.sol",
       "solcConfig": {
         "version": "0.8.20",
@@ -39,8 +39,8 @@
       ]
     },
     "D:\\CS Core Skills on Dev\\BlockChain3.0\\DexApp\\smart_contract\\contracts\\erc20.sol": {
-      "lastModificationDate": 1702628747600,
-      "contentHash": "4fd56727d39d56dfeacee2ca9e4cf99a",
+      "lastModificationDate": 1702723305514,
+      "contentHash": "0ccda99daa7a8767fc3cf00888398c49",
       "sourceName": "contracts/erc20.sol",
       "solcConfig": {
         "version": "0.8.20",
