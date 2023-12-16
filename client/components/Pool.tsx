@@ -86,7 +86,7 @@ const Pool: NextPage<MainProps> = ({ CPAMMContract }) => {
 				</div>
 
 				<div className={style.transferPropContainer}>
-					Shares: {shares}
+					Your Shares: {shares}
 				</div>
 			</div>
 
