@@ -1,17 +1,18 @@
-import Image from 'next/image'
-import { AiOutlineDown } from 'react-icons/ai'
-import ethLogo from '../assets/eth.png'
-import { useContext, useState, useEffect } from 'react'
-import { TransactionContext } from '../context/TransactionContext'
-import Modal from 'react-modal'
-import { useRouter } from 'next/router'
-import TransactionLoader from './TransactionLoader'
-import styles from "./Main.module.css"
+import Image from "next/image";
+import { AiOutlineDown } from "react-icons/ai";
+import ethLogo from "../assets/eth.png";
+import token1 from "../assets/token1.png";
+import token2 from "../assets/token2.png";
+import { useContext, useState, useEffect } from "react";
+import { TransactionContext } from "../context/TransactionContext";
+import Modal from "react-modal";
+import { useRouter } from "next/router";
+import TransactionLoader from "./TransactionLoader";
+import styles from "./Main.module.css";
 import { ethers } from "ethers";
 import { NextPage } from "next";
 
-
-Modal.setAppElement('#__next')
+Modal.setAppElement("#__next");
 
 const style = {
   wrapper: `w-screen flex items-center justify-center mt-14`,
@@ -25,23 +26,23 @@ const style = {
   currencySelectorTicker: `mx-2`,
   currencySelectorArrow: `text-lg`,
   confirmButton: `bg-[#2172E5] my-2 rounded-2xl py-6 px-20 text-xl font-semibold flex items-center justify-center cursor-pointer border border-[#2172E5] hover:border-[#234169]`,
-}
+};
 
 const customStyles = {
   content: {
-    top: '50%',
-    left: '50%',
-    right: 'auto',
-    bottom: 'auto',
-    transform: 'translate(-50%, -50%)',
-    backgroundColor: '#0a0b0d',
+    top: "50%",
+    left: "50%",
+    right: "auto",
+    bottom: "auto",
+    transform: "translate(-50%, -50%)",
+    backgroundColor: "#0a0b0d",
     padding: 0,
-    border: 'none',
+    border: "none",
   },
   overlay: {
-    backgroundColor: 'rgba(10, 11, 13, 0.75)',
+    backgroundColor: "rgba(10, 11, 13, 0.75)",
   },
-}
+};
 
 interface MainProps {
   Account: string;
@@ -51,8 +52,13 @@ interface MainProps {
   Provider: ethers.providers.Web3Provider | null;
 }
 
-const Liquidity: NextPage<MainProps> = ({ Account, CPAMMContract, ERC20_1Contract, ERC20_2Contract, Provider }) => {
-
+const Liquidity: NextPage<MainProps> = ({
+  Account,
+  CPAMMContract,
+  ERC20_1Contract,
+  ERC20_2Contract,
+  Provider,
+}) => {
   const [amount, setAmount] = useState(0);
   const [contract, setContract] = useState(0);
   const [calAmount, setCalAmount] = useState(0);
@@ -60,8 +66,7 @@ const Liquidity: NextPage<MainProps> = ({ Account, CPAMMContract, ERC20_1Contrac
   const [result2, setResult2] = useState(0);
   const [loading, setLoading] = useState(false);
 
-  console.log(result1, result2, amount, calAmount);
-
+  // console.log(result1, result2, amount, calAmount);
 
   const [currency1, setCurrency1] = useState("TKN1");
   const [currency2, setCurrency2] = useState("TKN2");
@@ -71,15 +76,11 @@ const Liquidity: NextPage<MainProps> = ({ Account, CPAMMContract, ERC20_1Contrac
   const [reserve1, setreserve1] = useState<number | null>();
   const [reserve2, setreserve2] = useState<number | null>();
 
-  
-
   const { formData, handleChange, sendTransaction } =
-    useContext(TransactionContext)
-  const router = useRouter()
-
+    useContext(TransactionContext);
+  const router = useRouter();
 
   useEffect(() => {
-
     const loadReserves = async () => {
       try {
         // console.log(CPAMMContract);
@@ -100,53 +101,75 @@ const Liquidity: NextPage<MainProps> = ({ Account, CPAMMContract, ERC20_1Contrac
       } catch (error) {
         console.error("Error loading reserves:", error);
       }
-
     };
 
-
-
     loadReserves();
-
   }, []);
 
-  const handleSubmit = async (e: any) => {
+  const handleAdd = async (e: any) => {
     e.preventDefault();
     setLoading(true);
-    
-    if (currency1 === "TKN1") {
-      await CPAMMContract?.addLiquidity(Number(amount), Number(calAmount));
-    } else if (currency1 === "TKN2") {
-      await CPAMMContract?.addLiquidity(Number(calAmount), Number(amount));
+
+    try {
+      if (currency1 === "TKN1") {
+        const transactionHash = await CPAMMContract?.addLiquidity(
+          Number(amount),
+          Number(calAmount)
+        );
+        await transactionHash?.wait();
+      } else if (currency1 === "TKN2") {
+        const transactionHash = await CPAMMContract?.addLiquidity(
+          Number(calAmount),
+          Number(amount)
+        );
+        await transactionHash?.wait();
+      }
+      alert("Transaction Completed !");
+    } catch (err) {
+      alert(err);
     }
+
+    setCalAmount(0);
     setLoading(false);
-
-    return alert("Transaction Completed !");
-
-  }
-
-  const handleApprove = async (e: any) => {
-    e.preventDefault();
-    setLoading(true);
-
-
-    await ERC20_1Contract?.approve('0xf2389CB94b348ea0614ecE169eDEEE45c7175e2f', Number(9999999));
-    await ERC20_2Contract?.approve('0xf2389CB94b348ea0614ecE169eDEEE45c7175e2f', Number(9999999));
-    setLoading(false);
-
   };
 
+  const handleRemove = async (e: any) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      if (currency1 === "TKN1") {
+        const transactionHash = await CPAMMContract?.addLiquidity(
+          Number(amount),
+          Number(calAmount)
+        );
+        await transactionHash?.wait();
+      } else if (currency1 === "TKN2") {
+        const transactionHash = await CPAMMContract?.addLiquidity(
+          Number(calAmount),
+          Number(amount)
+        );
+        await transactionHash?.wait();
+      }
+      alert("Transaction Completed !");
+    } catch (err) {
+      alert(err);
+    }
+
+    setCalAmount(0);
+    setLoading(false);
+  };
 
   function handleClick() {
-    setShowMenu(prev => {
-      return !prev
-    })
+    setShowMenu((prev) => {
+      return !prev;
+    });
   }
   function handleClick1() {
-    setShowMenu1(prev => {
-      return !prev
-    })
+    setShowMenu1((prev) => {
+      return !prev;
+    });
   }
-
 
   async function getRes() {
     const res1 = await CPAMMContract?.getReserve0();
@@ -157,29 +180,27 @@ const Liquidity: NextPage<MainProps> = ({ Account, CPAMMContract, ERC20_1Contrac
 
   useEffect(() => {
     getRes();
-  }, [])
+  }, []);
 
   useEffect(() => {
     let cal_amount;
-
+    // console.log("Hi");
     if (reserve1 != 0 && reserve2 != 0) {
-      if (currency1 === 'TKN1') {
+      if (currency1 === "TKN1") {
         cal_amount = (result2 * amount) / result1;
-      }
-      else if (currency1 === 'TKN2') {
+      } else if (currency1 === "TKN2") {
         cal_amount = (result1 * amount) / result2;
       }
-    }
-    else {
+    } else {
       cal_amount = amount;
     }
+    // console.log(Math.floor(Number(calAmount)));
+    setCalAmount(Math.floor(Number(cal_amount)));
+  }, [amount]);
 
-    setCalAmount(Number(cal_amount))
-  }, [amount])
-
-  const getCalValue = (e:any) => {
+  const getCalValue = (e: any) => {
     setAmount(Number(e.target.value));
-  }
+  };
 
   return (
     <div className={style.wrapper}>
@@ -188,49 +209,72 @@ const Liquidity: NextPage<MainProps> = ({ Account, CPAMMContract, ERC20_1Contrac
         <div>
           <div className={style.content}>
             <div className={style.formHeader}>
-              <div className=' w-screen flex justify-between'><div>Liquidity</div><div>TKN1: {reserve1} &nbsp; TKN2: {reserve2}</div></div>
+              <div className=" w-screen flex justify-between">
+                <div>Liquidity</div>
+                <div>
+                  TKN1: {reserve1} &nbsp; TKN2: {reserve2}
+                </div>
+              </div>
             </div>
             <div className={style.transferPropContainer}>
               <input
-                type='text'
+                type="text"
                 className={style.transferPropInput}
-                placeholder='Enter amount'
-                pattern='^[0-9]*[.,]?[0-9]*$'
+                placeholder="Enter amount"
+                pattern="^[0-9]*[.,]?[0-9]*$"
                 // onChange={e => handleChange(e, 'amount')}
                 onChange={getCalValue}
               />
               <div className={style.currencySelector} onClick={handleClick1}>
                 <div className={style.currencySelectorContent}>
                   <div className={style.currencySelectorIcon}>
-                    <Image src={ethLogo} alt='eth logo' height={20} width={20} />
+                    <Image
+                      src={currency1 === "TKN1" ? token1 : token2}
+                      alt="eth logo"
+                      height={20}
+                      width={20}
+                    />
                   </div>
-                  <div className={style.currencySelectorTicker}>{currency1}</div>
+                  <div className={style.currencySelectorTicker}>
+                    {currency1}
+                  </div>
                   <AiOutlineDown className={style.currencySelectorArrow} />
                 </div>
               </div>
               {showMenu1 && (
-                <div className={styles.dropdownmenu} onClick={() => setShowMenu1(false)}>
+                <div
+                  className={styles.dropdownmenu}
+                  onClick={() => setShowMenu1(false)}
+                >
                   <ul>
-                    <li onClick={() => {
-                      setCurrency1("TKN1")
-                      setCurrency2("TKN2")
-                      setContract(0)
-                    }}>TKN1</li>
-                    <li onClick={() => {
-                      setCurrency1("TKN2")
-                      setCurrency2("TKN1")
-                      setContract(1)
-                    }}>TKN2</li>
+                    <li
+                      onClick={() => {
+                        setCurrency1("TKN1");
+                        setCurrency2("TKN2");
+                        setContract(0);
+                      }}
+                    >
+                      TKN1
+                    </li>
+                    <li
+                      onClick={() => {
+                        setCurrency1("TKN2");
+                        setCurrency2("TKN1");
+                        setContract(1);
+                      }}
+                    >
+                      TKN2
+                    </li>
                   </ul>
                 </div>
               )}
             </div>
             <div className={style.transferPropContainer}>
               <input
-                type='text'
+                type="text"
                 className={style.transferPropInput}
-                placeholder='0.0'
-                pattern='^[0-9]*[.,]?[0-9]*$'
+                placeholder="0.0"
+                pattern="^[0-9]*[.,]?[0-9]*$"
                 // onChange={e => handleChange(e, 'addressTo')}
                 readOnly
                 value={calAmount !== calAmount ? 0.0 : calAmount}
@@ -238,9 +282,16 @@ const Liquidity: NextPage<MainProps> = ({ Account, CPAMMContract, ERC20_1Contrac
               <div className={style.currencySelector} onClick={handleClick}>
                 <div className={style.currencySelectorContent}>
                   <div className={style.currencySelectorIcon}>
-                    <Image src={ethLogo} alt='eth logo' height={20} width={20} />
+                    <Image
+                      src={currency1 === "TKN1" ? token2 : token1}
+                      alt="eth logo"
+                      height={20}
+                      width={20}
+                    />
                   </div>
-                  <div className={style.currencySelectorTicker}>{currency2}</div>
+                  <div className={style.currencySelectorTicker}>
+                    {currency2}
+                  </div>
                   {/* <AiOutlineDown className={style.currencySelectorArrow} /> */}
                 </div>
               </div>
@@ -248,15 +299,14 @@ const Liquidity: NextPage<MainProps> = ({ Account, CPAMMContract, ERC20_1Contrac
                         <div className={styles.dropdownmenu} onClick={() => setShowMenu(false)}>
                         </div>
                     )} */}
-            </div >
-            <div className='flex justify-between'>
-              <div onClick={e => handleSubmit(e)} className={style.confirmButton}>
-                Submit
-              </div>
-              <div onClick={e => handleApprove(e)} className={style.confirmButton}>
-                Approve
-              </div>
             </div>
+              <div
+                onClick={(e) => handleAdd(e)}
+                className={style.confirmButton}
+              >
+                Add
+              </div>
+            
           </div>
 
           <Modal isOpen={!!router.query.loading} style={customStyles}>
@@ -265,7 +315,7 @@ const Liquidity: NextPage<MainProps> = ({ Account, CPAMMContract, ERC20_1Contrac
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default Liquidity
+export default Liquidity;

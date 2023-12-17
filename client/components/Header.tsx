@@ -3,6 +3,8 @@ import { useEffect, useState } from 'react'
 import { FiArrowUpRight } from 'react-icons/fi'
 import ethLogo from '../assets/eth.png'
 import uniswapLogo from '../assets/uniswap.png'
+import ammLogo from '../assets/ammLogo.jpg'
+
 import { useContext } from 'react'
 import { TransactionContext } from '../context/TransactionContext'
 import { client } from '../lib/sanityClient'
@@ -12,7 +14,7 @@ import { Dispatch, SetStateAction } from 'react';
 
 const style = {
 	wrapper: `p-4 w-screen flex justify-between items-center`,
-	headerLogo: `flex w-1/4 items-center justify-start`,
+	headerLogo: `flex w-1/4 items-center justify-start rounded-full overflow-hidden`,
 	nav: `flex-1 flex justify-center items-center`,
 	navItemsContainer: `flex bg-[#191B1F] rounded-3xl`,
 	navItem: `px-4 py-2 m-1 flex items-center text-lg font-semibold text-[0.9rem] cursor-pointer rounded-3xl`,
@@ -26,12 +28,11 @@ const style = {
 }
 
 interface MainProps {
-	Account: string;
-	token:string;
-	setCurrPage:Dispatch<SetStateAction<string>>,
 	ERC20_1Contract: ethers.Contract | null;
 	ERC20_2Contract: ethers.Contract | null;
-	Provider: ethers.providers.Web3Provider | null;
+	Account: string;
+	setCurrPage: React.Dispatch<React.SetStateAction<string>>;
+	token: string;
 }
 
 
@@ -44,18 +45,18 @@ const Header: NextPage<MainProps> = ({ ERC20_1Contract, ERC20_2Contract, Account
 	const [showBalance, setShowBalance] = useState(false);
 
 
-	const handleBalance = async () => {
-		let currBalance;
-		if (token === "TKN1") {
-			currBalance = await ERC20_1Contract?.balanceOf(Account);
+	// const handleBalance = async () => {
+	// 	let currBalance;
+	// 	if (token === "TKN1") {
+	// 		currBalance = await ERC20_1Contract?.balanceOf(Account);
 
-		}
-		else if (token === "TKN2") {
-			currBalance = await ERC20_2Contract?.balanceOf(Account);
-		}
-		setBalanceAmount(Number(currBalance));
-		setShowBalance((prev) => !prev);
-	}
+	// 	}
+	// 	else if (token === "TKN2") {
+	// 		currBalance = await ERC20_2Contract?.balanceOf(Account);
+	// 	}
+	// 	setBalanceAmount(Number(currBalance));
+	// 	setShowBalance((prev) => !prev);
+	// }
 
 
 	useEffect(() => {
@@ -68,7 +69,7 @@ const Header: NextPage<MainProps> = ({ ERC20_1Contract, ERC20_2Contract, Account
         `
 				const clientRes = await client.fetch(query)
 				console.log(clientRes)
-				if (!(clientRes[0].userName == 'Unnamed')) {
+				if (!(clientRes[0]?.userName == 'Unnamed')) {
 					setUserName(clientRes[0].userName)
 				} else {
 					setUserName(
@@ -78,12 +79,13 @@ const Header: NextPage<MainProps> = ({ ERC20_1Contract, ERC20_2Contract, Account
 			})()
 
 		}
-	}, [currentAccount])
+		// handleBalance();
+	}, [currentAccount, token])
 
 	return (
 		<div className={style.wrapper}>
 			<div className={style.headerLogo}>
-				<Image src={uniswapLogo} alt='uniswap' height={40} width={40} />
+				<Image src={ammLogo} alt='uniswap' height={40} width={40} />
 			</div>
 			<div className={style.nav}>
 				<div className={style.navItemsContainer}>
@@ -99,20 +101,18 @@ const Header: NextPage<MainProps> = ({ ERC20_1Contract, ERC20_2Contract, Account
 					</div>
 					<div
 						onClick={() => {
-							setSelectedNav('swap')
-							setCurrPage("swap")
-							
+							setSelectedNav('mint')
+							setCurrPage("mint")
 						}}
-						className={`${style.navItem} ${selectedNav === 'swap' && style.activeNavItem
+						className={`${style.navItem} ${selectedNav === 'mint' && style.activeNavItem
 							}`}
 					>
-						Swap
+						Mint
 					</div>
 					<div
 						onClick={() => {
 							setSelectedNav('pool')
 							setCurrPage("pool")
-							
 						}}
 						className={`${style.navItem} ${selectedNav === 'pool' && style.activeNavItem
 							}`}
@@ -121,9 +121,18 @@ const Header: NextPage<MainProps> = ({ ERC20_1Contract, ERC20_2Contract, Account
 					</div>
 					<div
 						onClick={() => {
+							setSelectedNav('swap')
+							setCurrPage("swap")
+						}}
+						className={`${style.navItem} ${selectedNav === 'swap' && style.activeNavItem
+							}`}
+					>
+						Swap
+					</div>
+					<div
+						onClick={() => {
 							setSelectedNav('liquidity')
 							setCurrPage("liquidity")
-							
 						}
 						}
 						className={`${style.navItem} ${selectedNav === 'liquidity' && style.activeNavItem
@@ -163,11 +172,11 @@ const Header: NextPage<MainProps> = ({ ERC20_1Contract, ERC20_2Contract, Account
 						</div>
 					</div>
 				)}
-				<div onClick={() => handleBalance()} className={`${style.button} ${style.buttonPadding} px-10`}>
+				{/* <div onClick={() => handleBalance()} className={`${style.button} ${style.buttonPadding} px-10`}>
 					<div className={`${style.buttonIconContainer} mx-6`}>
 						{showBalance ? balanceAmount + " " + token : "Balance"}
 					</div>
-				</div>
+				</div> */}
 			</div>
 		</div>
 	)

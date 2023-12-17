@@ -5,9 +5,9 @@ import {schemaTypes} from './schemas'
 
 export default defineConfig({
   name: 'default',
-  title: 'dexApp',
+  title: 'DexApp',
 
-  projectId: '6pcp9wya',
+  projectId: 'yq7gabb5',
   dataset: 'production',
 
   plugins: [deskTool(), visionTool()],
