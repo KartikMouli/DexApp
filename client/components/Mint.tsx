@@ -115,12 +115,13 @@ const Mint: NextPage<MintProps> = ({
           await transactionHash?.wait();
         }
       }
+      alert("Transaction Completed !");
     } catch (err) {
       alert(err);
     }
     setLoading(false);
 
-    return alert("Transaction Completed !");
+    
   };
 
   function handleClick() {

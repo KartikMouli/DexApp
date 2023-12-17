@@ -92,6 +92,7 @@ const Pool: NextPage<PoolProps> = ({
 
       await hash1?.wait();
       await hash2?.wait();
+      alert("Transaction completed!");
     } catch (err) {
       alert(err);
     }
