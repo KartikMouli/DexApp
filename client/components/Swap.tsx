@@ -1,6 +1,8 @@
 import Image from "next/image";
 import { AiOutlineDown } from "react-icons/ai";
 import ethLogo from "../assets/eth.png";
+import token1 from "../assets/token1.png"
+import token2 from "../assets/token2.png"
 import { useContext, useState, useEffect } from "react";
 import { TransactionContext } from "../context/TransactionContext";
 import Modal from "react-modal";
@@ -71,7 +73,7 @@ const Swap: NextPage<MainProps> = ({ CPAMMContract }) => {
     setLoading(true);
 
     try {
-      if (contract) {
+      if (contract === 0) {
         const hash = await CPAMMContract?.swap(
           ERC20_0contractAddress,
           Number(amount)
@@ -154,7 +156,7 @@ const Swap: NextPage<MainProps> = ({ CPAMMContract }) => {
                 <div className={style.currencySelectorContent}>
                   <div className={style.currencySelectorIcon}>
                     <Image
-                      src={ethLogo}
+                      src={contract === 0? token1: token2}
                       alt="eth logo"
                       height={20}
                       width={20}
@@ -208,7 +210,7 @@ const Swap: NextPage<MainProps> = ({ CPAMMContract }) => {
                 <div className={style.currencySelectorContent}>
                   <div className={style.currencySelectorIcon}>
                     <Image
-                      src={ethLogo}
+                      src={contract === 0? token2: token1}
                       alt="eth logo"
                       height={20}
                       width={20}
@@ -224,7 +226,7 @@ const Swap: NextPage<MainProps> = ({ CPAMMContract }) => {
               onClick={(e) => handleSubmit(e)}
               className={style.confirmButton}
             >
-              Swap
+              Swap {currency1} with {currency2}
             </div>
           </div>
 

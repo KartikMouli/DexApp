@@ -1,6 +1,8 @@
 import Image from "next/image";
 import { AiOutlineDown } from "react-icons/ai";
 import ethLogo from "../assets/eth.png";
+import token1 from "../assets/token1.png";
+import token2 from "../assets/token2.png";
 import { useContext, useState, useEffect } from "react";
 import { TransactionContext } from "../context/TransactionContext";
 import Modal from "react-modal";
@@ -154,7 +156,7 @@ const Mint: NextPage<MintProps> = ({
                 <div className={style.currencySelectorContent}>
                   <div className={style.currencySelectorIcon}>
                     <Image
-                      src={ethLogo}
+                      src= {currency === "TKN1" ? token1 : token2}
                       alt="eth logo"
                       height={20}
                       width={20}

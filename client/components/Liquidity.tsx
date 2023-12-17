@@ -1,6 +1,8 @@
 import Image from "next/image";
 import { AiOutlineDown } from "react-icons/ai";
 import ethLogo from "../assets/eth.png";
+import token1 from "../assets/token1.png";
+import token2 from "../assets/token2.png";
 import { useContext, useState, useEffect } from "react";
 import { TransactionContext } from "../context/TransactionContext";
 import Modal from "react-modal";
@@ -104,7 +106,7 @@ const Liquidity: NextPage<MainProps> = ({
     loadReserves();
   }, []);
 
-  const handleSubmit = async (e: any) => {
+  const handleAdd = async (e: any) => {
     e.preventDefault();
     setLoading(true);
 
@@ -131,25 +133,30 @@ const Liquidity: NextPage<MainProps> = ({
     setLoading(false);
   };
 
-  const handleApprove = async (e: any) => {
+  const handleRemove = async (e: any) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      const hash1 = await ERC20_1Contract?.approve(
-        "0x4A30354A316471B32767FA940FE7D981E008c6Ed",
-        Number(9999999)
-      );
-      const hash2 = await ERC20_2Contract?.approve(
-        "0x4A30354A316471B32767FA940FE7D981E008c6Ed",
-        Number(9999999)
-      );
-
-      await hash1?.wait();
-      await hash2?.wait();
+      if (currency1 === "TKN1") {
+        const transactionHash = await CPAMMContract?.addLiquidity(
+          Number(amount),
+          Number(calAmount)
+        );
+        await transactionHash?.wait();
+      } else if (currency1 === "TKN2") {
+        const transactionHash = await CPAMMContract?.addLiquidity(
+          Number(calAmount),
+          Number(amount)
+        );
+        await transactionHash?.wait();
+      }
+      alert("Transaction Completed !");
     } catch (err) {
       alert(err);
     }
+
+    setCalAmount(0);
     setLoading(false);
   };
 
@@ -222,7 +229,7 @@ const Liquidity: NextPage<MainProps> = ({
                 <div className={style.currencySelectorContent}>
                   <div className={style.currencySelectorIcon}>
                     <Image
-                      src={ethLogo}
+                      src={currency1 === "TKN1" ? token1 : token2}
                       alt="eth logo"
                       height={20}
                       width={20}
@@ -276,7 +283,7 @@ const Liquidity: NextPage<MainProps> = ({
                 <div className={style.currencySelectorContent}>
                   <div className={style.currencySelectorIcon}>
                     <Image
-                      src={ethLogo}
+                      src={currency1 === "TKN1" ? token2 : token1}
                       alt="eth logo"
                       height={20}
                       width={20}
@@ -293,20 +300,13 @@ const Liquidity: NextPage<MainProps> = ({
                         </div>
                     )} */}
             </div>
-            <div className="flex justify-between">
               <div
-                onClick={(e) => handleSubmit(e)}
+                onClick={(e) => handleAdd(e)}
                 className={style.confirmButton}
               >
-                Submit
+                Add
               </div>
-              <div
-                onClick={(e) => handleApprove(e)}
-                className={style.confirmButton}
-              >
-                Approve
-              </div>
-            </div>
+            
           </div>
 
           <Modal isOpen={!!router.query.loading} style={customStyles}>
