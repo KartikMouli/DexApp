@@ -70,6 +70,12 @@ const Swap: NextPage<MainProps> = ({ CPAMMContract }) => {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+    
+    if(!amount){
+      alert("Amount field can not be blank :(");
+      return ;
+    }
+
     setLoading(true);
 
     try {

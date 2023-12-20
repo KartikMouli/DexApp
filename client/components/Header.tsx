@@ -27,6 +27,7 @@ const style = {
 	buttonAccent: `bg-[#172A42] w-40 border border-[#163256] hover:border-[#234169] h-full rounded-2xl flex items-center justify-center text-[#4F90EA]`,
 }
 
+
 interface MainProps {
 	ERC20_1Contract: ethers.Contract | null;
 	ERC20_2Contract: ethers.Contract | null;
@@ -68,7 +69,7 @@ const Header: NextPage<MainProps> = ({ ERC20_1Contract, ERC20_2Contract, Account
         }
         `
 				const clientRes = await client.fetch(query)
-				console.log(clientRes)
+				// console.log(clientRes)
 				if (!(clientRes[0]?.userName == 'Unnamed')) {
 					setUserName(clientRes[0].userName)
 				} else {

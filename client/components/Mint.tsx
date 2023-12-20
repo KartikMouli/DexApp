@@ -11,7 +11,7 @@ import TransactionLoader from "./TransactionLoader";
 import styles from "./Main.module.css";
 import { ethers } from "ethers";
 import { NextPage } from "next";
-import { Dispatch, SetStateAction } from "react";
+
 
 Modal.setAppElement("#__next");
 
@@ -78,9 +78,9 @@ const Mint: NextPage<MintProps> = ({
   };
 
   useEffect(() => {
-    console.log(ERC20_1Contract);
-    console.log(ERC20_2Contract);
-    console.log(Account);
+    // console.log(ERC20_1Contract);
+    // console.log(ERC20_2Contract);
+    // console.log(Account);
     handleBalance();
   }, [currency]);
 
@@ -92,7 +92,7 @@ const Mint: NextPage<MintProps> = ({
     // if (!addressTo || !amount) return;
 
     setLoading(true);
-    console.log(loading);
+    // console.log(loading);
     try {
       if (contract === 0) {
         const chk = await ERC20_1Contract?.isMintPossible();

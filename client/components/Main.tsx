@@ -12,6 +12,7 @@ import styles from "./Main.module.css";
 import { ethers } from "ethers";
 import { NextPage } from "next";
 import { Dispatch, SetStateAction } from "react";
+import { error } from "console";
 
 Modal.setAppElement("#__next");
 
@@ -52,28 +53,24 @@ const customStyles = {
   },
 };
 
-const Main: NextPage<MainProps> = ({
-  ERC20_1Contract,
-  ERC20_2Contract,
-  Account,
-  setToken,
-}) => {
-  const { formData, handleChange, saveTransaction } =
-    useContext(TransactionContext);
+const Main: NextPage<MainProps> = ({ ERC20_1Contract, ERC20_2Contract, Account, setToken}) => {
+
+  const { formData, handleChange, saveTransaction } = useContext(TransactionContext);
   const router = useRouter();
-
   const [loading, setLoading] = useState(false);
-
   const [contract, setContract] = useState(0);
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     const { addressTo, amount } = formData;
 
-    if (!addressTo || !amount) return;
+    if (!addressTo || !amount){
+      alert("Amount or Address field can not be blank :(");
+      return ;
+    }
 
     setLoading(true);
-    console.log(loading);
+    // console.log(loading);
     try {
       if (contract === 0) {
         const transactionHash = await ERC20_1Contract?.transfer(

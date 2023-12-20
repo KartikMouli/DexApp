@@ -108,6 +108,14 @@ const Liquidity: NextPage<MainProps> = ({
 
   const handleAdd = async (e: any) => {
     e.preventDefault();
+
+
+    if(!amount){
+      alert("Amount field can not be blank :(");
+      return ;
+    }
+
+    
     setLoading(true);
 
     try {
@@ -135,6 +143,10 @@ const Liquidity: NextPage<MainProps> = ({
 
   const handleRemove = async (e: any) => {
     e.preventDefault();
+
+
+  
+
     setLoading(true);
 
     try {
