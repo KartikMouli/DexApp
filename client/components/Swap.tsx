@@ -15,17 +15,17 @@ import { NextPage } from "next";
 Modal.setAppElement("#__next");
 
 const style = {
-  wrapper: `w-screen flex items-center justify-center mt-14`,
-  content: `bg-[#191B1F] w-[40rem] rounded-2xl p-4`,
-  formHeader: `px-2 flex items-center justify-between font-semibold text-xl`,
-  transferPropContainer: `bg-[#20242A] my-3 rounded-2xl p-6 text-3xl  border border-[#20242A] hover:border-[#41444F]  flex justify-between relative`,
-  transferPropInput: `bg-transparent placeholder:text-[#B2B9D2] outline-none mb-6 w-full text-2xl`,
-  currencySelector: `flex w-1/4`,
-  currencySelectorContent: `w-full h-min flex justify-between items-center bg-[#2D2F36] hover:bg-[#41444F] rounded-2xl text-xl font-medium cursor-pointer p-2 mt-[-0.2rem]`,
+  wrapper: `flex flex-col items-center justify-center w-screen mt-10`,
+  content: `bg-[#1E1F24] w-full max-w-lg rounded-lg p-4 shadow-md`, // Adjusted width for a compact view
+  formHeader: `flex items-center justify-between text-xl font-semibold text-white p-2`, // Font size adjusted for compactness
+  transferPropContainer: `bg-[#2C2F36] my-2 rounded-lg p-3 text-lg border border-[#3A3F4C] flex justify-between relative transition duration-300 ease-in-out hover:border-[#505868]`, // Reduced margin and padding
+  transferPropInput: `bg-transparent placeholder:text-[#A6ACBD] outline-none w-full text-base py-1 px-2 rounded text-white`, // Adjusted padding for compactness
+  currencySelector: `flex w-1/4`, // Reduced width
+  currencySelectorContent: `flex items-center justify-between bg-[#2F3139] rounded-md text-lg font-medium cursor-pointer px-3 py-1 text-white hover:bg-[#404552] transition duration-200 ease-in-out`, // Smoother hover color and reduced padding
   currencySelectorIcon: `flex items-center`,
-  currencySelectorTicker: `mx-2`,
-  currencySelectorArrow: `text-lg`,
-  confirmButton: `bg-[#2172E5] my-2 rounded-2xl py-6 px-8 text-xl font-semibold flex items-center justify-center cursor-pointer border border-[#2172E5] hover:border-[#234169]`,
+  currencySelectorTicker: `ml-2`,
+  currencySelectorArrow: `text-base text-gray-400`,
+  confirmButton: `bg-gradient-to-r from-blue-600 to-blue-500 my-2 rounded-lg py-2 text-lg font-semibold text-white flex justify-center cursor-pointer shadow-md hover:opacity-90 transition duration-300 ease-in-out`, // Adjusted button padding and margins
 };
 
 const customStyles = {
